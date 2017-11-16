@@ -62,7 +62,7 @@ public class ExerciseController implements Initializable {
         }
         if (newtonButton.isSelected()) {
             f = ia.newtonInterpolation();
-            resultText.setText("Nk(x)=" + ia.newtonStringFunction());
+            resultText.setText("Nl(x)=" + ia.newtonStringFunction());
         }
     }
     
