@@ -72,7 +72,7 @@ public class InterpolationAlgorithms {
 
     public Function newtonInterpolation() {
 
-        List<Double> dividedDifferences = calculateDividedDifferenceTable();
+        List<Double> dividedDifferences = calculateDividedDifferenceTable(xPoints,yPoints);
 
         function = new Function("Newton", 1) {
             @Override
@@ -96,7 +96,7 @@ public class InterpolationAlgorithms {
 
     public String newtonStringFunction() {
 
-        List<Double> dividedDifferences = calculateDividedDifferenceTable();
+        List<Double> dividedDifferences = calculateDividedDifferenceTable(xPoints,yPoints);
         String result = dividedDifferences.get(0) + "+";
 
         for (int k = 1; k < xPoints.size(); k++) {
@@ -113,8 +113,33 @@ public class InterpolationAlgorithms {
 
         return result;
     }
+    
+    
+    
+    public Function inverseInterpolation(){
+        List<Double> dividedDifferences = calculateDividedDifferenceTable(yPoints,xPoints);
 
-    private List<Double> calculateDividedDifferenceTable() {
+        function = new Function("Inverse", 1) {
+            @Override
+            public double apply(double... doubles) {
+
+                Double sum = dividedDifferences.get(0);
+                for (int k = 1; k < xPoints.size(); k++) {
+                    Double mult = 1.0;
+                    for (int i = 0; i < k; i++) {
+                        mult *= (doubles[0] - xPoints.get(i));
+                    }
+                    sum += mult * dividedDifferences.get(k);
+                }
+                return sum;
+            }
+        ;
+        };
+            
+     return function;
+    }
+
+    private List<Double> calculateDividedDifferenceTable(List<Double> xPoints,List<Double> yPoints) {
 
         List<Double> dividedDifferences = new LinkedList(yPoints);
 
