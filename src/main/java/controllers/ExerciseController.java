@@ -2,7 +2,6 @@ package controllers;
 
 import interpolationapplication.coordinatesystem.CoordinateSystem;
 import java.net.URL;
-import java.util.Iterator;
 
 import java.util.LinkedHashMap;
 
