@@ -139,10 +139,12 @@ public class ExerciseController implements Initializable {
                     }
                     if (newtonButton.isSelected()) {
                         f = ia.newtonInterpolation();
-                        resultText.setText("Nl(x)=" + ia.newtonStringFunction());
+                        resultText.setText("N(x)=" + ia.newtonStringFunction());
                     }
                 } catch (InputException ie) {
                     somethingWrong(ie.getMessage());
+                }catch(UnknownFunctionOrVariableException ufve){
+                    somethingWrong("Hiba a bevitelben!");
                 }
             
 
@@ -191,7 +193,8 @@ public class ExerciseController implements Initializable {
                 try {
                     makeExpression(first, second);
                 } catch (UnknownFunctionOrVariableException ufve) {
-                    somethingWrong("Hiba a bevitelben!");
+                    
+                    throw ufve;
                 }
             } else {
                 throw new InputException("Nem adtál meg minden mezőt");
@@ -213,7 +216,7 @@ public class ExerciseController implements Initializable {
                     makeExpression(xPoint, function);
 
                 } catch (UnknownFunctionOrVariableException ufve) {
-                    somethingWrong("Hiba a bevitelben!");
+                   throw ufve;
                 }
             } else {
                throw new InputException("Üres mezők!");

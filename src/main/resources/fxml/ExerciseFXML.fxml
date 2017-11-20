@@ -21,7 +21,7 @@
                   <RadioButton fx:id="csebisevButton" layoutX="97.0" layoutY="33.0" mnemonicParsing="false" text="Csebisev" toggleGroup="$radioGroup" />
                   <RadioButton fx:id="newtonButton" layoutX="4.0" layoutY="33.0" mnemonicParsing="false" text="Newton" toggleGroup="$radioGroup" />
                   <RadioButton fx:id="lagrangeButton" layoutX="4.0" layoutY="6.0" mnemonicParsing="false" text="Lagrange" toggleGroup="$radioGroup" />
-                  <TextField fx:id="pointsNumber" layoutX="447.0" layoutY="21.0" onAction="#getPointNumber" prefHeight="25.0" prefWidth="53.0" promptText="max 5" />
+                  <TextField fx:id="pointsNumber" layoutX="447.0" layoutY="21.0" onAction="#getPointNumber" prefHeight="25.0" prefWidth="53.0" promptText="max 6" />
                   <Label layoutX="330.0" layoutY="24.0" text="Alappontok száma:" />
                </children>
             </AnchorPane>
