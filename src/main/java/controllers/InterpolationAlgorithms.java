@@ -20,6 +20,8 @@ public class InterpolationAlgorithms {
         yPoints = new LinkedList(points.values());
     }
 
+   
+
     public Function lagrangeInterpolation() {
 
         function = new Function("lagrange", 1) {
@@ -66,6 +68,8 @@ public class InterpolationAlgorithms {
                 result += "*" + y;
             }
         }
+        
+        result=result.replace("--", "+");
 
         return result;
     }
@@ -110,6 +114,8 @@ public class InterpolationAlgorithms {
                 result += dividedDifferences.get(k) + "*";
             }
         }
+        
+        result=result.replace("--", "+");
 
         return result;
     }
@@ -139,7 +145,7 @@ public class InterpolationAlgorithms {
      return function;
     }
 
-    private List<Double> calculateDividedDifferenceTable(List<Double> xPoints,List<Double> yPoints) {
+    public List<Double> calculateDividedDifferenceTable(List<Double> xPoints,List<Double> yPoints) {
 
         List<Double> dividedDifferences = new LinkedList(yPoints);
 
