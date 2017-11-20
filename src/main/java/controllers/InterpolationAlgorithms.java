@@ -61,7 +61,7 @@ public class InterpolationAlgorithms {
         }
         for (Double y : yPoints) {
             if (result.equals("")) {
-                result += "*" + y;
+                result +=y;
             } else {
                 result += "*" + y;
             }
