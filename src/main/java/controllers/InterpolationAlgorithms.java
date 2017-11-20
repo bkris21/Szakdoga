@@ -152,9 +152,6 @@ public class InterpolationAlgorithms {
             }
         }
 
-        for (Double d : dividedDifferences) {
-            System.out.println(d);
-        }
         return dividedDifferences;
     }
 
