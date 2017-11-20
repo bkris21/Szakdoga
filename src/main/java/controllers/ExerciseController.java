@@ -2,6 +2,7 @@ package controllers;
 
 import interpolationapplication.coordinatesystem.CoordinateSystem;
 import java.net.URL;
+import java.util.Iterator;
 
 import java.util.LinkedHashMap;
 
@@ -17,6 +18,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import net.objecthunter.exp4j.Expression;
@@ -27,18 +29,22 @@ import net.objecthunter.exp4j.function.Function;
 public class ExerciseController implements Initializable {
 
     private InterpolationAlgorithms ia;
+    private int numberOfTextFields = 0;
 
     private Function f;
     private Point interval;
 
     @FXML
-    private Label yLabel, fxLabel,hintLabel1,hintLabel2;
+    private Label yLabel, fxLabel, hintLabel1, hintLabel2;
+
+    @FXML
+    private GridPane fields;
 
     @FXML
     private TextArea resultText;
 
     @FXML
-    private TextField xOne, xTwo, xThree, xFour, xFive, yOne, yTwo, yThree, yFour, yFive, fxTextField;
+    private TextField fxTextField, pointsNumber;
 
     @FXML
     private TextField intervalField;
@@ -47,13 +53,45 @@ public class ExerciseController implements Initializable {
     private RadioButton lagrangeButton, csebisevButton, newtonButton, inverzButton, hermiteButton, functionsButton;
 
     @FXML
-    private ToggleGroup interpolationRadioButtonGroup, functionOrValue;
+    private ToggleGroup interpolationRadioButtonGroup;
 
     private Map<Double, Double> numberPairs = new LinkedHashMap<>();
     private Map<TextField, TextField> textFields = new LinkedHashMap<>();
 
     @FXML
-    void functionButtonPressed(ActionEvent event) {
+    void getPointNumber(ActionEvent event) {
+
+        fields.getChildren().clear();
+        textFields.clear();
+
+        try {
+            numberOfTextFields = Integer.parseInt(pointsNumber.getText());
+
+            for (int i = 0; i < numberOfTextFields; i++) {
+                TextField fieldX = new TextField();
+                TextField fieldY = new TextField();
+                textFields.put(fieldX, fieldY);
+                fields.setConstraints(fieldX, i, 0);
+                fields.getChildren().add(fieldX);
+               
+                fields.setConstraints(fieldY, i, 1);
+                fields.getChildren().add(fieldY);
+            }
+            
+            if(functionsButton.isSelected()){
+                for(TextField field : textFields.values()){
+                    field.setVisible(false);
+                }
+            }
+
+        } catch (NumberFormatException nfe) {
+            somethingWrong("Egy pozitív egész számot adjál meg!");
+        }
+    }
+
+    @FXML
+    private void functionButtonPressed(ActionEvent event) {
+       fxTextField.clear();
         if (functionsButton.isSelected()) {
             for (TextField textField : textFields.values()) {
                 textField.setVisible(false);
@@ -72,34 +110,48 @@ public class ExerciseController implements Initializable {
             fxTextField.setVisible(false);
             fxLabel.setVisible(false);
             hintLabel2.setVisible(false);
-            
+
         }
     }
 
     @FXML
-    void goInterpolation(ActionEvent event) {
+    private void goInterpolation(ActionEvent event) {
         numberPairs.clear();
         resultText.clear();
-        if(functionsButton.isSelected()){
-         readWithFunctionField();
-        }else{
-        readTextFields();
-        }
 
-        ia = new InterpolationAlgorithms((LinkedHashMap<Double, Double>) numberPairs);
+        if (interpolationRadioButtonGroup.getSelectedToggle() == null) {
+            somethingWrong("Nem jelölte meg az interpoláció fajtáját!");
+        } else if (isEmptyString(pointsNumber.getText())) {
+            somethingWrong("Nem adtad meg az alappontok számát!");
+        } else {
 
-        if (lagrangeButton.isSelected()) {
-            f = ia.lagrangeInterpolation();
-            resultText.setText("L(x)=" + ia.lagrangeStringFunction());
-        }
-        if (newtonButton.isSelected()) {
-            f = ia.newtonInterpolation();
-            resultText.setText("Nl(x)=" + ia.newtonStringFunction());
+                try {
+                    if (functionsButton.isSelected()) {
+                        readWithFunctionField();
+                    } else {
+
+                        readTextFields();
+                    }
+                    ia = new InterpolationAlgorithms((LinkedHashMap<Double, Double>) numberPairs);
+
+                    if (lagrangeButton.isSelected()) {
+                        f = ia.lagrangeInterpolation();
+                        resultText.setText("L(x)=" + ia.lagrangeStringFunction());
+                    }
+                    if (newtonButton.isSelected()) {
+                        f = ia.newtonInterpolation();
+                        resultText.setText("Nl(x)=" + ia.newtonStringFunction());
+                    }
+                } catch (InputException ie) {
+                    somethingWrong(ie.getMessage());
+                }
+            
+
         }
     }
 
     @FXML
-    void openCoordinateSystem(ActionEvent event) throws Exception {
+    private void openCoordinateSystem(ActionEvent event) throws Exception {
         try {
             interval = readInterval();
 
@@ -110,8 +162,8 @@ public class ExerciseController implements Initializable {
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources
-    ) {
+    public void initialize(URL location, ResourceBundle resources) {
+        interpolationRadioButtonGroup = new ToggleGroup();
 
         lagrangeButton.setToggleGroup(interpolationRadioButtonGroup);
         newtonButton.setToggleGroup(interpolationRadioButtonGroup);
@@ -119,18 +171,18 @@ public class ExerciseController implements Initializable {
         inverzButton.setToggleGroup(interpolationRadioButtonGroup);
         hermiteButton.setToggleGroup(interpolationRadioButtonGroup);
 
-        textFields.put(xOne, yOne);
-        textFields.put(xTwo, yTwo);
-        textFields.put(xThree, yThree);
-        textFields.put(xFour, yFour);
-        textFields.put(xFive, yFive);
+        for (TextField textField : textFields.keySet()) {
+            textField.setVisible(false);
+            textFields.get(textField).setVisible(false);
+        }
 
         fxTextField.setVisible(false);
         fxLabel.setVisible(false);
         hintLabel2.setVisible(false);
+
     }
 
-    private Map readTextFields() {
+    private Map readTextFields() throws InputException {
 
         for (TextField field : textFields.keySet()) {
             String first = field.getText();
@@ -143,7 +195,7 @@ public class ExerciseController implements Initializable {
                     somethingWrong("Hiba a bevitelben!");
                 }
             } else {
-                break;
+                throw new InputException("Nem adtál meg minden mezőt");
             }
         }
 
@@ -151,12 +203,12 @@ public class ExerciseController implements Initializable {
 
     }
 
-    private Map readWithFunctionField() {
+    private Map readWithFunctionField() throws InputException {
 
         for (TextField field : textFields.keySet()) {
             String xPoint = field.getText();
             String function = fxTextField.getText();
-            if (!isEmptyString(xPoint) && !isEmptyString(xPoint)) {
+            if (!isEmptyString(xPoint) && !isEmptyString(function)) {
                 try {
                     function = function.replace("x", xPoint);
                     makeExpression(xPoint, function);
@@ -165,7 +217,7 @@ public class ExerciseController implements Initializable {
                     somethingWrong("Hiba a bevitelben!");
                 }
             } else {
-                break;
+               throw new InputException("Üres mezők!");
             }
         }
         return numberPairs;
