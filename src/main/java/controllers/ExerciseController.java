@@ -198,8 +198,7 @@ public class ExerciseController implements Initializable {
                 } else {
 
                     readTextFields();
-                    
-                   
+
                 }
                 ia = new InterpolationAlgorithms((List<Point>) numberPairs);
 
@@ -228,9 +227,35 @@ public class ExerciseController implements Initializable {
     private void openCoordinateSystem(ActionEvent event) throws Exception {
         try {
             interval = readInterval();
-
-            new CoordinateSystem(f, interval.getX(), interval.getY()).start(new Stage());
-        } catch (NullPointerException npe) {
+            if(!functionsButton.isSelected()){
+                new CoordinateSystem(f, interval.getX(), interval.getY()).start(new Stage());
+            }else{
+               
+                Function f2= new Function("Original") {
+                    @Override
+                    public double apply(double... doubles) {
+                      String function = fxTextField.getText();
+                      
+                      String newString = "";
+                      int i=0;
+                      while(function.charAt(i)!='x'){
+                          newString+=function.charAt(i);
+                          i++;
+                      }
+                      newString+=doubles[0];
+                      for(i=i+1;i<function.length();i++){
+                           newString+=function.charAt(i);
+                      }
+                      Expression exp= new ExpressionBuilder(newString).build();
+                      return exp.evaluate();
+                      
+                    }
+                };
+                new CoordinateSystem(f,f2, interval.getX(), interval.getY()).start(new Stage());
+            }
+            
+           
+                    } catch (NullPointerException npe) {
             somethingWrong("Először nyomd meg a 'Mehet' gombot!");
         }
 
@@ -246,9 +271,9 @@ public class ExerciseController implements Initializable {
 
             if (!isEmptyString(x) && !isEmptyString(y)) {
                 try {
-                    if (hermiteButton.isSelected() && !isEmptyString(d1X)&& !isEmptyString(d2X)) {
-                        p = makeExpression(x, y, d1X,d2X);
-                    } else if (hermiteButton.isSelected() && !isEmptyString(d1X) ) {
+                    if (hermiteButton.isSelected() && !isEmptyString(d1X) && !isEmptyString(d2X)) {
+                        p = makeExpression(x, y, d1X, d2X);
+                    } else if (hermiteButton.isSelected() && !isEmptyString(d1X)) {
                         p = makeExpression(x, y, d1X);
                     } else {
                         p = makeExpression(x, y);
@@ -269,18 +294,19 @@ public class ExerciseController implements Initializable {
     }
 
     private List<Point> readWithFunctionField() throws InputException {
-      Point p;
+        Point p;
         for (TextFields field : textFields) {
-             String x = field.getText1().getText();
+            String x = field.getText1().getText();
             String fx = fxTextField.getText();
+            fx=fx.replace("x", x);
             String d1X = field.getText3().getText();
             String d2X = field.getText4().getText();
 
             if (!isEmptyString(x) && !isEmptyString(fx)) {
                 try {
-                    if (hermiteButton.isSelected() && !isEmptyString(d1X)&& !isEmptyString(d2X)) {
-                        p = makeExpression(x, fx, d1X,d2X);
-                    } else if (hermiteButton.isSelected() && !isEmptyString(d1X) ) {
+                    if (hermiteButton.isSelected() && !isEmptyString(d1X) && !isEmptyString(d2X)) {
+                        p = makeExpression(x, fx, d1X, d2X);
+                    } else if (hermiteButton.isSelected() && !isEmptyString(d1X)) {
                         p = makeExpression(x, fx, d1X);
                     } else {
                         p = makeExpression(x, fx);

@@ -18,12 +18,12 @@ import javafx.stage.Stage;
 public class CoordinateSystem extends Application {
 
     Function f;
-    Function f2 = new Function("Testsz") {
-        @Override
-        public double apply(double... doubles) {
-            return doubles[0] * doubles[0];
-        }
-    };
+   Function f2=new Function("defoult") {
+       @Override
+       public double apply(double... doubles) {
+         return 0;
+       }
+   };
     double interval1;
     double interval2;
     final double SCALE_DELTA = 1.1;
@@ -34,31 +34,32 @@ public class CoordinateSystem extends Application {
         interval1 = i1;
         interval2 = i2;
     }
+     public CoordinateSystem(Function f,Function f2, double i1, double i2) {
+        this.f = f;
+        this.f2=f2;
+        interval1 = i1;
+        interval2 = i2;
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
-        Axes axes1 = new Axes(
+        Axes axes = new Axes(
                 400, 300,
                 -10, 10, 1,
                 -10, 10, 1
         );
-        Axes axes2 = new Axes(
-                400, 300,
-                -10, 10, 1,
-                -10, 10, 1
-        );
-
+      
         Plot plot1 = new Plot(
                 f,
                 interval1, interval2, 0.001,
-                axes1,
+                axes,
                 Color.ORANGE.deriveColor(0, 1, 1, 0.6)
         );
         Plot plot2 = new Plot(
                 f2,
                 interval1, interval2, 0.001,
-                axes1,
-                Color.RED.deriveColor(0, 1, 1, 0.6)
+                axes,
+                Color.RED.deriveColor(0, 1, 1, 0.2)
         );
 
         StackPane rootPane = new StackPane();
@@ -74,8 +75,10 @@ public class CoordinateSystem extends Application {
 
         stage.setTitle("Grafikus nézet");
 
+        
+       
         rootPane.getChildren().add(layout);
-        rootPane.getChildren().add(layout2);
+         rootPane.getChildren().add(layout2);
 
         stage.setScene(scene);
 

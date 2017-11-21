@@ -10,6 +10,7 @@ interpolationapplication\coordinatesystem\CoordinateSystem$1.class
 controllers\Point.class
 controllers\InputException.class
 interpolationapplication\InterpolationApplication.class
+controllers\ExerciseController$3.class
 controllers\TextFields.class
 interpolationapplication\coordinatesystem\CoordinateSystem$3.class
 interpolationapplication\coordinatesystem\Axes.class
