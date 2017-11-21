@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,7 +36,7 @@ public class ExerciseController implements Initializable {
     private Point interval;
 
     @FXML
-    private Label yLabel, fxLabel, hintLabel1, hintLabel2;
+    private Label yLabel, fxLabel, hintLabel1, hintLabel2, firstDerivative, secondDerivative;
 
     @FXML
     private GridPane fields;
@@ -57,114 +59,48 @@ public class ExerciseController implements Initializable {
     private Map<Double, Double> numberPairs = new LinkedHashMap<>();
     private Map<TextField, TextField> textFields = new LinkedHashMap<>();
 
-    @FXML
-    void getPointNumber(ActionEvent event) {
-
-        fields.getChildren().clear();
-        textFields.clear();
-
-        try {
-            numberOfTextFields = Integer.parseInt(pointsNumber.getText());
-
-            for (int i = 0; i < numberOfTextFields; i++) {
-                TextField fieldX = new TextField();
-                TextField fieldY = new TextField();
-                textFields.put(fieldX, fieldY);
-                fields.setConstraints(fieldX, i, 0);
-                fields.getChildren().add(fieldX);
-               
-                fields.setConstraints(fieldY, i, 1);
-                fields.getChildren().add(fieldY);
-            }
-            
-            if(functionsButton.isSelected()){
-                for(TextField field : textFields.values()){
-                    field.setVisible(false);
-                }
-            }
-
-        } catch (NumberFormatException nfe) {
-            somethingWrong("Egy pozitív egész számot adjál meg!");
-        }
-    }
-
-    @FXML
-    private void functionButtonPressed(ActionEvent event) {
-       fxTextField.clear();
-        if (functionsButton.isSelected()) {
-            for (TextField textField : textFields.values()) {
-                textField.setVisible(false);
-            }
-            yLabel.setVisible(false);
-            hintLabel1.setVisible(false);
-            fxLabel.setVisible(true);
-            fxTextField.setVisible(true);
-            hintLabel2.setVisible(true);
-        } else {
-            for (TextField textField : textFields.values()) {
-                textField.setVisible(true);
-            }
-            yLabel.setVisible(true);
-            hintLabel1.setVisible(true);
-            fxTextField.setVisible(false);
-            fxLabel.setVisible(false);
-            hintLabel2.setVisible(false);
-
-        }
-    }
-
-    @FXML
-    private void goInterpolation(ActionEvent event) {
-        numberPairs.clear();
-        resultText.clear();
-
-        if (interpolationRadioButtonGroup.getSelectedToggle() == null) {
-            somethingWrong("Nem jelölte meg az interpoláció fajtáját!");
-        } else if (isEmptyString(pointsNumber.getText())) {
-            somethingWrong("Nem adtad meg az alappontok számát!");
-        } else {
-
-                try {
-                    if (functionsButton.isSelected()) {
-                        readWithFunctionField();
-                    } else {
-
-                        readTextFields();
-                    }
-                    ia = new InterpolationAlgorithms((LinkedHashMap<Double, Double>) numberPairs);
-
-                    if (lagrangeButton.isSelected()) {
-                        f = ia.lagrangeInterpolation();
-                        resultText.setText("L(x)=" + ia.lagrangeStringFunction());
-                    }
-                    if (newtonButton.isSelected()) {
-                        f = ia.newtonInterpolation();
-                        resultText.setText("N(x)=" + ia.newtonStringFunction());
-                    }
-                } catch (InputException ie) {
-                    somethingWrong(ie.getMessage());
-                }catch(UnknownFunctionOrVariableException ufve){
-                    somethingWrong("Hiba a bevitelben!");
-                }
-            
-
-        }
-    }
-
-    @FXML
-    private void openCoordinateSystem(ActionEvent event) throws Exception {
-        try {
-            interval = readInterval();
-
-            new CoordinateSystem(f, interval.getX(), interval.getY()).start(new Stage());
-        } catch (NullPointerException npe) {
-            somethingWrong("Először nyomd meg a 'Mehet' gombot!");
-        }
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         interpolationRadioButtonGroup = new ToggleGroup();
+
+        hermiteButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    firstDerivative.setVisible(true);
+                    secondDerivative.setVisible(true);
+                } else {
+                    firstDerivative.setVisible(false);
+                    secondDerivative.setVisible(false);
+                }
+
+            }
+        });
+
+        functionsButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    for (TextField textField : textFields.values()) {
+                        textField.setVisible(false);
+                    }
+                    yLabel.setVisible(false);
+                    hintLabel1.setVisible(false);
+                    fxLabel.setVisible(true);
+                    fxTextField.setVisible(true);
+                    hintLabel2.setVisible(true);
+                } else {
+                    for (TextField textField : textFields.values()) {
+                        textField.setVisible(true);
+                    }
+                    yLabel.setVisible(true);
+                    hintLabel1.setVisible(true);
+                    fxTextField.setVisible(false);
+                    fxLabel.setVisible(false);
+                    hintLabel2.setVisible(false);
+                }
+            }
+        });
 
         lagrangeButton.setToggleGroup(interpolationRadioButtonGroup);
         newtonButton.setToggleGroup(interpolationRadioButtonGroup);
@@ -181,6 +117,91 @@ public class ExerciseController implements Initializable {
         fxLabel.setVisible(false);
         hintLabel2.setVisible(false);
 
+        firstDerivative.setVisible(false);
+        secondDerivative.setVisible(false);
+
+    }
+
+    @FXML
+    void getPointNumber(ActionEvent event) {
+
+        fields.getChildren().clear();
+        textFields.clear();
+
+        try {
+            numberOfTextFields = Integer.parseInt(pointsNumber.getText());
+
+            for (int i = 0; i < numberOfTextFields; i++) {
+                TextField fieldX = new TextField();
+                TextField fieldY = new TextField();
+                textFields.put(fieldX, fieldY);
+                fields.setConstraints(fieldX, i, 0);
+                fields.getChildren().add(fieldX);
+
+                fields.setConstraints(fieldY, i, 1);
+                fields.getChildren().add(fieldY);
+            }
+
+            if (functionsButton.isSelected()) {
+                for (TextField field : textFields.values()) {
+                    field.setVisible(false);
+                }
+            }
+
+        } catch (NumberFormatException nfe) {
+            somethingWrong("Egy pozitív egész számot adjál meg!");
+        }
+    }
+
+    
+
+    @FXML
+    private void goInterpolation(ActionEvent event) {
+        numberPairs.clear();
+        resultText.clear();
+
+        if (interpolationRadioButtonGroup.getSelectedToggle() == null) {
+            somethingWrong("Nem jelölte meg az interpoláció fajtáját!");
+        } else if (isEmptyString(pointsNumber.getText())) {
+            somethingWrong("Nem adtad meg az alappontok számát!");
+        } else {
+
+            try {
+                if (functionsButton.isSelected()) {
+                    readWithFunctionField();
+                } else {
+
+                    readTextFields();
+                }
+                ia = new InterpolationAlgorithms((LinkedHashMap<Double, Double>) numberPairs);
+
+                if (lagrangeButton.isSelected()) {
+                    f = ia.lagrangeInterpolation();
+                    resultText.setText("L(x)=" + ia.lagrangeStringFunction());
+                }
+                if (newtonButton.isSelected()) {
+                    f = ia.newtonInterpolation();
+                    resultText.setText("N(x)=" + ia.newtonStringFunction());
+                }
+            } catch (InputException ie) {
+                somethingWrong(ie.getMessage());
+            } catch (UnknownFunctionOrVariableException ufve) {
+                somethingWrong("Hiba a bevitelben!");
+            }
+
+        }
+    }
+
+    @FXML
+    private void openCoordinateSystem(ActionEvent event) throws Exception {
+        try {
+            interval = readInterval();
+
+            new CoordinateSystem(f, interval.getX(), interval.getY()).start(new Stage());
+        } catch (NullPointerException npe) {
+            somethingWrong("Először nyomd meg a 'Mehet' gombot!");
+        }
+
     }
 
     private Map readTextFields() throws InputException {
@@ -193,7 +214,7 @@ public class ExerciseController implements Initializable {
                 try {
                     makeExpression(first, second);
                 } catch (UnknownFunctionOrVariableException ufve) {
-                    
+
                     throw ufve;
                 }
             } else {
@@ -216,10 +237,10 @@ public class ExerciseController implements Initializable {
                     makeExpression(xPoint, function);
 
                 } catch (UnknownFunctionOrVariableException ufve) {
-                   throw ufve;
+                    throw ufve;
                 }
             } else {
-               throw new InputException("Üres mezők!");
+                throw new InputException("Üres mezők!");
             }
         }
         return numberPairs;

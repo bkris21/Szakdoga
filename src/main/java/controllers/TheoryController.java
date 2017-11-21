@@ -15,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -27,16 +28,20 @@ public class TheoryController implements Initializable {
     @FXML
     private WebView theoryText;
     
+    @FXML
+    private MenuButton mainButton;
+    
     
     @FXML
     private void lagrangeTheoryAction(ActionEvent event) throws Exception { 
         
-        readTextFromFile("Try.html");
+        readTextFromFile("Lagrange.htm");
+        mainButton.setText("Lagrange interpoláció");
     }
     
      @FXML
     private void newtoneTheoryAction(ActionEvent event) throws Exception {
-           
+            mainButton.setText("Newton interpoláció");
     }
     
     

@@ -37,7 +37,7 @@
                   <TextField fx:id="intervalField" layoutX="90.0" layoutY="286.0" promptText="[-10,10]" />
                   <Label layoutX="15.0" layoutY="290.0" text="Intervallum:" />
                   <Label fx:id="fxLabel" layoutX="20.0" layoutY="81.0" text="F(X)=" />
-                  <RadioButton fx:id="functionsButton" layoutX="474.0" layoutY="12.0" mnemonicParsing="false" onAction="#functionButtonPressed" text="Függvény" />
+                  <RadioButton fx:id="functionsButton" layoutX="474.0" layoutY="12.0" mnemonicParsing="false" text="Függvény" />
                   <Label fx:id="hintLabel2" layoutX="18.0" layoutY="12.0" text="Add meg az alappontokat és a függvényt!" />
                   <GridPane fx:id="fields" hgap="10.0" layoutX="67.0" layoutY="40.0" vgap="10.0">
                     <columnConstraints>
@@ -51,9 +51,13 @@
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                   </GridPane>
                   <TextField fx:id="fxTextField" layoutX="67.0" layoutY="80.0" />
+                  <Label fx:id="firstDerivative" layoutX="18.0" layoutY="129.0" text="F'(X)" />
+                  <Label fx:id="secondDerivative" layoutX="15.0" layoutY="164.0" text="F''(X)" />
                </children>
             </AnchorPane>
         </items>

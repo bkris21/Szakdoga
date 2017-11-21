@@ -5,6 +5,7 @@ controllers\InterpolationAlgorithms$1.class
 controllers\ExerciseController$Point.class
 interpolationapplication\Theory.class
 interpolationapplication\coordinatesystem\CoordinateSystem.class
+controllers\ExerciseController$1.class
 interpolationapplication\coordinatesystem\CoordinateSystem$1.class
 controllers\InputException.class
 interpolationapplication\InterpolationApplication.class
@@ -15,5 +16,6 @@ controllers\TheoryController.class
 controllers\ExerciseController.class
 interpolationapplication\coordinatesystem\Plot.class
 controllers\InterpolationAlgorithms$2.class
+controllers\ExerciseController$2.class
 interpolationapplication\coordinatesystem\CoordinateSystem$2.class
 controllers\InterpolationApplicationController.class
