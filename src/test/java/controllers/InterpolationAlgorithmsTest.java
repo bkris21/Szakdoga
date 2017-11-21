@@ -27,7 +27,7 @@ public class InterpolationAlgorithmsTest {
         yPoints.add(p.getY());
         }
     }
-/*
+
     @Test
     public void testDividedDifferences() {
 
@@ -55,8 +55,8 @@ public class InterpolationAlgorithmsTest {
     public void TestNewtonToString(){
          InterpolationAlgorithms ipa = new InterpolationAlgorithms((List<Point>) numberPairs);
          
-         assertThat(ipa.newtonStringFunction(), is("2.0+(x-1.0)*-0.5*(x-1.0)*(x+1.0)*-0.1238095238095238"));
+         assertThat(ipa.newtonStringFunction(), is("2.0+(x-1.0)*-0.5+(x-1.0)*(x+1.0)*-0.1238095238095238"));
     }
-    */
+    
 
 }
