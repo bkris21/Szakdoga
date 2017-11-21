@@ -2,13 +2,14 @@ controllers\InterpolationAlgorithms$3.class
 interpolationapplication\coordinatesystem\CoordinateSystem$Delta.class
 interpolationapplication\Exercise.class
 controllers\InterpolationAlgorithms$1.class
-controllers\ExerciseController$Point.class
 interpolationapplication\Theory.class
 interpolationapplication\coordinatesystem\CoordinateSystem.class
 controllers\ExerciseController$1.class
 interpolationapplication\coordinatesystem\CoordinateSystem$1.class
+controllers\Point.class
 controllers\InputException.class
 interpolationapplication\InterpolationApplication.class
+controllers\TextFields.class
 interpolationapplication\coordinatesystem\CoordinateSystem$3.class
 interpolationapplication\coordinatesystem\Axes.class
 controllers\InterpolationAlgorithms.class

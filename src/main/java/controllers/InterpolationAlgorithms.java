@@ -1,6 +1,8 @@
 package controllers;
 
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,15 +11,21 @@ import net.objecthunter.exp4j.function.Function;
 
 public class InterpolationAlgorithms {
 
-    private LinkedHashMap<Double, Double> points;
+    private List<Point> points;
     private Function function;
-    private List<Double> xPoints;
-    private List<Double> yPoints;
+    private List<Double> xPoints= new ArrayList<>();
+    private List<Double> yPoints= new ArrayList<>();
+    private List<Double> firstDerivatives = new ArrayList<>();
+    private List<Double> secondDerivatives = new ArrayList<>();
 
-    public InterpolationAlgorithms(LinkedHashMap<Double, Double> points) {
+    public InterpolationAlgorithms(List<Point> points) {
         this.points = points;
-        xPoints = new LinkedList(points.keySet());
-        yPoints = new LinkedList(points.values());
+        for(Point p : points){
+        xPoints.add(p.getX());
+        yPoints.add(p.getY());
+        firstDerivatives.add(p.getD1x());
+        secondDerivatives.add(p.getD2x());
+        }
     }
 
    
@@ -120,6 +128,8 @@ public class InterpolationAlgorithms {
         return result;
     }
     
+    
+  
     
     
     public Function inverseInterpolation(){

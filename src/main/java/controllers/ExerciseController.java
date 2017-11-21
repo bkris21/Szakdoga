@@ -2,8 +2,10 @@ package controllers;
 
 import interpolationapplication.coordinatesystem.CoordinateSystem;
 import java.net.URL;
+import java.util.ArrayList;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -56,8 +58,8 @@ public class ExerciseController implements Initializable {
     @FXML
     private ToggleGroup interpolationRadioButtonGroup;
 
-    private Map<Double, Double> numberPairs = new LinkedHashMap<>();
-    private Map<TextField, TextField> textFields = new LinkedHashMap<>();
+    private List<Point> numberPairs = new ArrayList<>();
+    private List<TextFields> textFields = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -69,9 +71,18 @@ public class ExerciseController implements Initializable {
                 if (newValue) {
                     firstDerivative.setVisible(true);
                     secondDerivative.setVisible(true);
+                    for (TextFields field : textFields) {
+                        field.getText3().setVisible(true);
+                        field.getText4().setVisible(true);
+                    }
+
                 } else {
                     firstDerivative.setVisible(false);
                     secondDerivative.setVisible(false);
+                    for (TextFields field : textFields) {
+                        field.getText3().setVisible(false);
+                        field.getText4().setVisible(false);
+                    }
                 }
 
             }
@@ -81,8 +92,8 @@ public class ExerciseController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
-                    for (TextField textField : textFields.values()) {
-                        textField.setVisible(false);
+                    for (TextFields field : textFields) {
+                        field.getText2().setVisible(false);
                     }
                     yLabel.setVisible(false);
                     hintLabel1.setVisible(false);
@@ -90,8 +101,8 @@ public class ExerciseController implements Initializable {
                     fxTextField.setVisible(true);
                     hintLabel2.setVisible(true);
                 } else {
-                    for (TextField textField : textFields.values()) {
-                        textField.setVisible(true);
+                    for (TextFields textField : textFields) {
+                        textField.getText2().setVisible(true);
                     }
                     yLabel.setVisible(true);
                     hintLabel1.setVisible(true);
@@ -108,9 +119,9 @@ public class ExerciseController implements Initializable {
         inverzButton.setToggleGroup(interpolationRadioButtonGroup);
         hermiteButton.setToggleGroup(interpolationRadioButtonGroup);
 
-        for (TextField textField : textFields.keySet()) {
-            textField.setVisible(false);
-            textFields.get(textField).setVisible(false);
+        for (TextFields textField : textFields) {
+            textField.getText1().setVisible(false);
+            textField.getText2().setVisible(false);
         }
 
         fxTextField.setVisible(false);
@@ -134,17 +145,34 @@ public class ExerciseController implements Initializable {
             for (int i = 0; i < numberOfTextFields; i++) {
                 TextField fieldX = new TextField();
                 TextField fieldY = new TextField();
-                textFields.put(fieldX, fieldY);
+                TextField d1Field = new TextField();
+                TextField d2Field = new TextField();
+                textFields.add(new TextFields(fieldX, fieldY, d1Field, d2Field));
+
                 fields.setConstraints(fieldX, i, 0);
                 fields.getChildren().add(fieldX);
 
                 fields.setConstraints(fieldY, i, 1);
                 fields.getChildren().add(fieldY);
+
+                fields.setConstraints(d1Field, i, 2);
+                fields.getChildren().add(d1Field);
+
+                fields.setConstraints(d2Field, i, 3);
+                fields.getChildren().add(d2Field);
             }
 
             if (functionsButton.isSelected()) {
-                for (TextField field : textFields.values()) {
-                    field.setVisible(false);
+                for (TextFields field : textFields) {
+                    field.getText2().setVisible(false);
+                }
+
+            }
+
+            if (!hermiteButton.isSelected()) {
+                for (TextFields field : textFields) {
+                    field.getText3().setVisible(false);
+                    field.getText4().setVisible(false);
                 }
             }
 
@@ -152,8 +180,6 @@ public class ExerciseController implements Initializable {
             somethingWrong("Egy pozitív egész számot adjál meg!");
         }
     }
-
-    
 
     @FXML
     private void goInterpolation(ActionEvent event) {
@@ -172,8 +198,10 @@ public class ExerciseController implements Initializable {
                 } else {
 
                     readTextFields();
+                    
+                   
                 }
-                ia = new InterpolationAlgorithms((LinkedHashMap<Double, Double>) numberPairs);
+                ia = new InterpolationAlgorithms((List<Point>) numberPairs);
 
                 if (lagrangeButton.isSelected()) {
                     f = ia.lagrangeInterpolation();
@@ -183,6 +211,10 @@ public class ExerciseController implements Initializable {
                     f = ia.newtonInterpolation();
                     resultText.setText("N(x)=" + ia.newtonStringFunction());
                 }
+                if (hermiteButton.isSelected()) {
+
+                }
+
             } catch (InputException ie) {
                 somethingWrong(ie.getMessage());
             } catch (UnknownFunctionOrVariableException ufve) {
@@ -204,15 +236,24 @@ public class ExerciseController implements Initializable {
 
     }
 
-    private Map readTextFields() throws InputException {
+    private List<Point> readTextFields() throws InputException {
+        Point p;
+        for (TextFields field : textFields) {
+            String x = field.getText1().getText();
+            String y = field.getText2().getText();
+            String d1X = field.getText3().getText();
+            String d2X = field.getText4().getText();
 
-        for (TextField field : textFields.keySet()) {
-            String first = field.getText();
-            String second = textFields.get(field).getText();
-
-            if (!isEmptyString(first) && !isEmptyString(second)) {
+            if (!isEmptyString(x) && !isEmptyString(y)) {
                 try {
-                    makeExpression(first, second);
+                    if (hermiteButton.isSelected() && !isEmptyString(d1X)&& !isEmptyString(d2X)) {
+                        p = makeExpression(x, y, d1X,d2X);
+                    } else if (hermiteButton.isSelected() && !isEmptyString(d1X) ) {
+                        p = makeExpression(x, y, d1X);
+                    } else {
+                        p = makeExpression(x, y);
+                    }
+                    numberPairs.add(p);
                 } catch (UnknownFunctionOrVariableException ufve) {
 
                     throw ufve;
@@ -220,27 +261,37 @@ public class ExerciseController implements Initializable {
             } else {
                 throw new InputException("Nem adtál meg minden mezőt");
             }
+
         }
 
         return numberPairs;
 
     }
 
-    private Map readWithFunctionField() throws InputException {
+    private List<Point> readWithFunctionField() throws InputException {
+      Point p;
+        for (TextFields field : textFields) {
+             String x = field.getText1().getText();
+            String fx = fxTextField.getText();
+            String d1X = field.getText3().getText();
+            String d2X = field.getText4().getText();
 
-        for (TextField field : textFields.keySet()) {
-            String xPoint = field.getText();
-            String function = fxTextField.getText();
-            if (!isEmptyString(xPoint) && !isEmptyString(function)) {
+            if (!isEmptyString(x) && !isEmptyString(fx)) {
                 try {
-                    function = function.replace("x", xPoint);
-                    makeExpression(xPoint, function);
-
+                    if (hermiteButton.isSelected() && !isEmptyString(d1X)&& !isEmptyString(d2X)) {
+                        p = makeExpression(x, fx, d1X,d2X);
+                    } else if (hermiteButton.isSelected() && !isEmptyString(d1X) ) {
+                        p = makeExpression(x, fx, d1X);
+                    } else {
+                        p = makeExpression(x, fx);
+                    }
+                    numberPairs.add(p);
                 } catch (UnknownFunctionOrVariableException ufve) {
+
                     throw ufve;
                 }
             } else {
-                throw new InputException("Üres mezők!");
+                throw new InputException("Nem adtál meg minden mezőt");
             }
         }
         return numberPairs;
@@ -281,12 +332,23 @@ public class ExerciseController implements Initializable {
         return p;
     }
 
-    private void makeExpression(String first, String second) {
+    private Point makeExpression(String first, String second, String... s) {
         Point p;
         Expression exp1 = new ExpressionBuilder(first).build();
         Expression exp2 = new ExpressionBuilder(second).build();
         p = new Point(exp1.evaluate(), exp2.evaluate());
-        numberPairs.put(p.getX(), p.getY());
+        if (s.length == 1) {
+            Expression exp3 = new ExpressionBuilder(s[0]).build();
+            p.setD1x(exp3.evaluate());
+        }
+        if (s.length == 2) {
+            Expression exp3 = new ExpressionBuilder(s[0]).build();
+            Expression exp4 = new ExpressionBuilder(s[1]).build();
+            p.setD1x(exp3.evaluate());
+            p.setD2x(exp4.evaluate());
+        }
+
+        return p;
     }
 
     private boolean isEmptyString(String s) {
@@ -299,25 +361,6 @@ public class ExerciseController implements Initializable {
         return (s.charAt(0) == '[' || s.charAt(0) == ']')
                 && (s.charAt(s.length() - 1) == '[' || s.charAt(s.length() - 1) == ']')
                 && two.length == 2;
-    }
-
-    private class Point {
-
-        double x;
-        double y;
-
-        public Point(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public double getX() {
-            return x;
-        }
-
-        public double getY() {
-            return y;
-        }
     }
 
     private void somethingWrong(String msg) {
