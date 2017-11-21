@@ -18,12 +18,14 @@ import javafx.stage.Stage;
 public class CoordinateSystem extends Application {
 
     Function f;
-   Function f2=new Function("defoult") {
+     Function f2=new Function("default") {
        @Override
        public double apply(double... doubles) {
          return 0;
        }
    };
+     Plot plot2;
+     Plot plot1;
     double interval1;
     double interval2;
     final double SCALE_DELTA = 1.1;
@@ -49,18 +51,28 @@ public class CoordinateSystem extends Application {
                 -10, 10, 1
         );
       
-        Plot plot1 = new Plot(
+        plot1 = new Plot(
                 f,
                 interval1, interval2, 0.001,
                 axes,
-                Color.ORANGE.deriveColor(0, 1, 1, 0.6)
+                Color.ORANGE.deriveColor(0, 1, 1, 0.8)
         );
-        Plot plot2 = new Plot(
+        if(f2.getName()=="default"){
+              plot2 = new Plot(
                 f2,
                 interval1, interval2, 0.001,
                 axes,
-                Color.RED.deriveColor(0, 1, 1, 0.2)
+                Color.RED.deriveColor(0, 1, 1, 0.0)
         );
+        }else{
+             plot2 = new Plot(
+                f2,
+                interval1, interval2, 0.001,
+                axes,
+                Color.RED.deriveColor(0, 1, 1, 0.4)
+          );
+        }
+       
 
         StackPane rootPane = new StackPane();
         Scene scene = new Scene(rootPane);

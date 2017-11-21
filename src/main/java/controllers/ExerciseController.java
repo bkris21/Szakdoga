@@ -134,14 +134,15 @@ public class ExerciseController implements Initializable {
     }
 
     @FXML
-    void getPointNumber(ActionEvent event) {
+    void getPointNumber(ActionEvent event) throws InputException {
 
         fields.getChildren().clear();
         textFields.clear();
 
         try {
             numberOfTextFields = Integer.parseInt(pointsNumber.getText());
-
+          
+            
             for (int i = 0; i < numberOfTextFields; i++) {
                 TextField fieldX = new TextField();
                 TextField fieldY = new TextField();
@@ -237,6 +238,7 @@ public class ExerciseController implements Initializable {
                       String function = fxTextField.getText();
                       
                       String newString = "";
+                     
                       int i=0;
                       while(function.charAt(i)!='x'){
                           newString+=function.charAt(i);

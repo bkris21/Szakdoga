@@ -107,9 +107,14 @@ public class InterpolationAlgorithms {
     }
 
     public String newtonStringFunction() {
-
+         String result="";
         List<Double> dividedDifferences = calculateDividedDifferenceTable(xPoints,yPoints);
-        String result = dividedDifferences.get(0) + "+";
+        if(dividedDifferences.size()>1){
+             result += dividedDifferences.get(0) + "+";
+        }else{
+            result += dividedDifferences.get(0);
+        }
+       
 
         for (int k = 1; k < xPoints.size(); k++) {
             Double mult = 1.0;
@@ -119,7 +124,7 @@ public class InterpolationAlgorithms {
             if (k == xPoints.size() - 1) {
                 result += dividedDifferences.get(k);
             } else {
-                result += dividedDifferences.get(k) + "*";
+                result += dividedDifferences.get(k) + "+";
             }
         }
         
