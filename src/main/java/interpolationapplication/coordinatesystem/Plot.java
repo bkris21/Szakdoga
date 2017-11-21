@@ -15,10 +15,10 @@ public  class Plot extends Pane {
         public Plot(
                 Function f,
                 double xMin, double xMax, double xInc,
-                Axes axes
+                Axes axes,Color color
         ) {
             Path path = new Path();
-            path.setStroke(Color.ORANGE.deriveColor(0, 1, 1, 0.6));
+            path.setStroke(color);
             path.setStrokeWidth(2);
 
             path.setClip(
