@@ -2,6 +2,8 @@ package controllers;
 
 
 import com.sun.javafx.scene.control.skin.VirtualFlow;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -61,9 +63,9 @@ public class InterpolationAlgorithms {
             for (int i = 0; i < xPoints.size(); i++) {
                 if (i != k) {
                     if (result.equals("")) {
-                        result += "(x-" + xPoints.get(i) + ")/(" + (xPoints.get(k) - xPoints.get(i)) + ")";
+                        result += "(x-" + round(xPoints.get(i),3) + ")/(" + (round(xPoints.get(k),3) - round(xPoints.get(i),3)) + ")";
                     } else {
-                        result += "*(x-" + xPoints.get(i) + ")/(" + (xPoints.get(k) - xPoints.get(i)) + ")";
+                        result += "*(x-" + round(xPoints.get(i),3) + ")/(" + (round(xPoints.get(k),3) - round(xPoints.get(i),3)) + ")";
                     }
                 }
             }
@@ -71,9 +73,9 @@ public class InterpolationAlgorithms {
         }
         for (Double y : yPoints) {
             if (result.equals("")) {
-                result +=y;
+                result +=round(y,3);
             } else {
-                result += "*" + y;
+                result += "*" + round(y,3);
             }
         }
         
@@ -110,21 +112,21 @@ public class InterpolationAlgorithms {
          String result="";
         List<Double> dividedDifferences = calculateDividedDifferenceTable(xPoints,yPoints);
         if(dividedDifferences.size()>1){
-             result += dividedDifferences.get(0) + "+";
+             result += round(dividedDifferences.get(0),3) + "+";
         }else{
-            result += dividedDifferences.get(0);
+            result += round(dividedDifferences.get(0),3);
         }
        
 
         for (int k = 1; k < xPoints.size(); k++) {
             Double mult = 1.0;
             for (int i = 0; i < k; i++) {
-                result += "(x-" + xPoints.get(i) + ")*";
+                result += "(x-" + round(xPoints.get(i),3) + ")*";
             }
             if (k == xPoints.size() - 1) {
-                result += dividedDifferences.get(k);
+                result += round(dividedDifferences.get(k),3);
             } else {
-                result += dividedDifferences.get(k) + "+";
+                result +=round(dividedDifferences.get(k),3) + "+";
             }
         }
         
@@ -174,6 +176,15 @@ public class InterpolationAlgorithms {
         }
 
         return dividedDifferences;
+    }
+    
+    
+    
+    private double round(double value,int places){
+        
+        BigDecimal num = new BigDecimal(value);
+        num= num.setScale(places, RoundingMode.HALF_UP);
+        return num.doubleValue();
     }
 
 }

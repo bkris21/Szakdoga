@@ -50,12 +50,13 @@ public class InterpolationAlgorithmsTest {
         
         assertThat(ipa.lagrangeStringFunction(),is("(x+1.0)/(2.0)*(x+2.5)/(3.5)*(x-1.0)/(-2.0)*(x+2.5)/(1.5)*(x-1.0)/(-3.5)*(x+1.0)/(-1.5)*2.0*3.0*3.1"));
     }
+
     
     @Test
     public void TestNewtonToString(){
          InterpolationAlgorithms ipa = new InterpolationAlgorithms((List<Point>) numberPairs);
          
-         assertThat(ipa.newtonStringFunction(), is("2.0+(x-1.0)*-0.5+(x-1.0)*(x+1.0)*-0.1238095238095238"));
+         assertThat(ipa.newtonStringFunction(), is("2.0+(x-1.0)*-0.5+(x-1.0)*(x+1.0)*-0.124"));
     }
     
 
