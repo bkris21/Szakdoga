@@ -46,7 +46,7 @@ public class ExerciseController implements Initializable {
     private Point interval;
 
     @FXML
-    private Label yLabel, fxLabel, hintLabel1, hintLabel2, firstDerivative, secondDerivative;
+    private Label yLabel, fxLabel, hintLabel1, hintLabel2, firstDerivative, secondDerivative,resultOfInverseLabel;
 
     @FXML
     private GridPane fields;
@@ -58,10 +58,10 @@ public class ExerciseController implements Initializable {
     private TextField fxTextField, pointsNumber;
 
     @FXML
-    private TextField intervalField;
+    private TextField intervalField,resultOfInverse;
 
     @FXML
-    private RadioButton lagrangeButton, csebisevButton, newtonButton, inverzButton, hermiteButton, functionsButton;
+    private RadioButton lagrangeButton,  newtonButton, inverzButton, hermiteButton, functionsButton;
 
     @FXML
     private ToggleGroup interpolationRadioButtonGroup;
@@ -75,6 +75,8 @@ public class ExerciseController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         interpolationRadioButtonGroup = new ToggleGroup();
+        resultOfInverse.setVisible(false);
+        resultOfInverseLabel.setVisible(false);
 
         hermiteButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -97,6 +99,20 @@ public class ExerciseController implements Initializable {
                 }
 
             }
+        });
+        
+        inverzButton.selectedProperty().addListener(new ChangeListener<Boolean>(){
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+               if(newValue){
+                   resultOfInverse.setVisible(true);
+                    resultOfInverseLabel.setVisible(true);
+               }else{
+                   resultOfInverse.setVisible(false);
+                    resultOfInverseLabel.setVisible(false);
+               }
+            }
+            
         });
 
         functionsButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -126,7 +142,7 @@ public class ExerciseController implements Initializable {
 
         lagrangeButton.setToggleGroup(interpolationRadioButtonGroup);
         newtonButton.setToggleGroup(interpolationRadioButtonGroup);
-        csebisevButton.setToggleGroup(interpolationRadioButtonGroup);
+      
         inverzButton.setToggleGroup(interpolationRadioButtonGroup);
         hermiteButton.setToggleGroup(interpolationRadioButtonGroup);
 
@@ -224,6 +240,19 @@ public class ExerciseController implements Initializable {
                 if (newtonButton.isSelected()) {
                     f = ia.newtonInterpolation();
                     resultText.setText("N(x)=" + ia.newtonStringFunction());
+                }
+                if(inverzButton.isSelected()){
+                    
+                     f = ia.inverseInterpolation();
+                     resultText.setText("N~(x)=" + ia.inverseStringFunction());
+                     
+                     String s = ia.inverseStringFunction();
+                     s=s.replace("x", ""+0);
+                     Expression exp = new ExpressionBuilder(s).build();
+                     double res=exp.evaluate();
+                     
+                     resultOfInverse.setText(""+ia.round(res,3));
+                     
                 }
                 if (hermiteButton.isSelected()) {
 

@@ -14,6 +14,7 @@ controllers\ExerciseController$3.class
 controllers\TextFields.class
 interpolationapplication\coordinatesystem\CoordinateSystem$3.class
 interpolationapplication\coordinatesystem\Axes.class
+controllers\ExerciseController$4.class
 controllers\InterpolationAlgorithms.class
 controllers\TheoryController.class
 controllers\ExerciseController.class

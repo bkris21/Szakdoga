@@ -129,13 +129,45 @@ public class InterpolationAlgorithms {
         function = new Function("Inverse", 1) {
             @Override
             public double apply(double... doubles) {
-                    return 0;
+                     String func =inverseStringFunction();
+
+                func = func.replace("x", "" + doubles[0]);
+
+                Expression exp = new ExpressionBuilder(func).build();
+                return exp.evaluate();
             }
         ;
         };
             
      return function;
     }
+    
+    public String inverseStringFunction() {
+        String result = "";
+        List<Double> dividedDifferences = calculateDividedDifferenceTable(yPoints, xPoints);
+        if (dividedDifferences.size() > 1) {
+            result += round(dividedDifferences.get(0), 3) + "+";
+        } else {
+            result += round(dividedDifferences.get(0), 3);
+        }
+
+        for (int k = 1; k < yPoints.size(); k++) {
+            Double mult = 1.0;
+            for (int i = 0; i < k; i++) {
+                result += "(x-" + round(yPoints.get(i), 3) + ")*";
+            }
+            if (k == yPoints.size() - 1) {
+                result += round(dividedDifferences.get(k), 3);
+            } else {
+                result += round(dividedDifferences.get(k), 3) + "+";
+            }
+        }
+
+        result = result.replace("--", "+");
+
+        return result;
+    }
+
 
     public List<Double> calculateDividedDifferenceTable(List<Double> xPoints, List<Double> yPoints) {
 
@@ -153,7 +185,7 @@ public class InterpolationAlgorithms {
         return dividedDifferences;
     }
 
-    private double round(double value, int places) {
+    public double round(double value, int places) {
 
         BigDecimal num = new BigDecimal(value);
         num = num.setScale(places, RoundingMode.HALF_UP);
