@@ -209,7 +209,7 @@ public class ExerciseController implements Initializable {
                 } else {
 
                     readTextFields();
-                    intervalField.setText("[" + textFields.get(0).getText1().getText()+ "," + textFields.get(textFields.size() - 1).getText1().getText() + "]");
+                    intervalField.setText("[" + textFields.get(0).getText1().getText() + "," + textFields.get(textFields.size() - 1).getText1().getText() + "]");
 
                 }
                 ia = new InterpolationAlgorithms((List<Point>) numberPairs);
@@ -238,6 +238,7 @@ public class ExerciseController implements Initializable {
     @FXML
     private void openCoordinateSystem(ActionEvent event) throws Exception {
         try {
+           
             interval = readInterval();
             if (!functionsButton.isSelected()) {
                 new CoordinateSystem(f, interval.getX(), interval.getY()).start(new Stage());
@@ -266,7 +267,8 @@ public class ExerciseController implements Initializable {
                 };
                 new CoordinateSystem(f, f2, interval.getX(), interval.getY()).start(new Stage());
             }
-
+        }catch(InputException ie){
+            somethingWrong(ie.getMessage());
         } catch (NullPointerException npe) {
             somethingWrong("Először nyomd meg a 'Mehet' gombot!");
         }
@@ -290,6 +292,18 @@ public class ExerciseController implements Initializable {
                     } else {
                         p = makeExpression(x, y);
                     }
+                    for (Point p1 : numberPairs) {
+                        if (!inverzButton.isSelected()) {
+
+                            if (p1.getX() == p.getX()) {
+                                throw new InputException("Kétszer adtál meg egy alappontot!");
+                            }
+                        } else if(p1.getX() == p.getX() || p1.getY()==p.getY()){
+                             throw new InputException("Nem monoton a függvény!");
+                        }
+
+                    }
+
                     numberPairs.add(p);
 
                 } catch (UnknownFunctionOrVariableException ufve) {
@@ -303,8 +317,6 @@ public class ExerciseController implements Initializable {
         }
 
         sortNumbers();
-
-       
 
         return numberPairs;
 
@@ -340,14 +352,14 @@ public class ExerciseController implements Initializable {
         return numberPairs;
     }
 
-    private Point readInterval() {
+    private Point readInterval() throws InputException {
         String intervalString = intervalField.getText();
         Expression exp1;
         Expression exp2;
         Point p = new Point(0, 0);
 
         if (isEmptyString(intervalString)) {
-            p = new Point(-10, 10);
+          throw new InputException("Nem adtál meg intervallumot!");
         } else {
             if (goodInterval(intervalString)) {
                 try {
@@ -388,7 +400,7 @@ public class ExerciseController implements Initializable {
                     String tempd1X = textFields.get(j - 1).getText3().getText();
                     String tempd2X = textFields.get(j - 1).getText4().getText();
                     textFields.get(j - 1).setText1(textFields.get(j).getText1().getText());
-                    textFields.get(j).setText1(tempX); 
+                    textFields.get(j).setText1(tempX);
                     textFields.get(j - 1).setText2(textFields.get(j).getText2().getText());
                     textFields.get(j).setText2(tempY);
                     textFields.get(j - 1).setText3(textFields.get(j).getText3().getText());
