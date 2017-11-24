@@ -201,11 +201,14 @@ public class ExerciseController implements Initializable {
             somethingWrong("Nem jelölte meg az interpoláció fajtáját!");
         } else if (isEmptyString(pointsNumber.getText())) {
             somethingWrong("Nem adtad meg az alappontok számát!");
+        } else if (textFields.size() == 0) {
+            somethingWrong("Alappontokat meg kell adni!");
         } else {
 
             try {
                 if (functionsButton.isSelected()) {
                     readWithFunctionField();
+                    intervalField.setText("[" + textFields.get(0).getText1().getText() + "," + textFields.get(textFields.size() - 1).getText1().getText() + "]");
                 } else {
 
                     readTextFields();
@@ -238,7 +241,7 @@ public class ExerciseController implements Initializable {
     @FXML
     private void openCoordinateSystem(ActionEvent event) throws Exception {
         try {
-           
+
             interval = readInterval();
             if (!functionsButton.isSelected()) {
                 new CoordinateSystem(f, interval.getX(), interval.getY()).start(new Stage());
@@ -249,25 +252,16 @@ public class ExerciseController implements Initializable {
                     public double apply(double... doubles) {
                         String function = fxTextField.getText();
 
-                        String newString = "";
+                        function = function.replace("x", "" + doubles[0]);
 
-                        int i = 0;
-                        while (function.charAt(i) != 'x') {
-                            newString += function.charAt(i);
-                            i++;
-                        }
-                        newString += doubles[0];
-                        for (i = i + 1; i < function.length(); i++) {
-                            newString += function.charAt(i);
-                        }
-                        Expression exp = new ExpressionBuilder(newString).build();
+                        Expression exp = new ExpressionBuilder(function).build();
                         return exp.evaluate();
 
                     }
                 };
                 new CoordinateSystem(f, f2, interval.getX(), interval.getY()).start(new Stage());
             }
-        }catch(InputException ie){
+        } catch (InputException ie) {
             somethingWrong(ie.getMessage());
         } catch (NullPointerException npe) {
             somethingWrong("Először nyomd meg a 'Mehet' gombot!");
@@ -298,8 +292,8 @@ public class ExerciseController implements Initializable {
                             if (p1.getX() == p.getX()) {
                                 throw new InputException("Kétszer adtál meg egy alappontot!");
                             }
-                        } else if(p1.getX() == p.getX() || p1.getY()==p.getY()){
-                             throw new InputException("Nem monoton a függvény!");
+                        } else if (p1.getX() == p.getX() || p1.getY() == p.getY()) {
+                            throw new InputException("Nem monoton a függvény!");
                         }
 
                     }
@@ -349,6 +343,7 @@ public class ExerciseController implements Initializable {
                 throw new InputException("Nem adtál meg minden mezőt");
             }
         }
+        sortNumbers();
         return numberPairs;
     }
 
@@ -359,7 +354,7 @@ public class ExerciseController implements Initializable {
         Point p = new Point(0, 0);
 
         if (isEmptyString(intervalString)) {
-          throw new InputException("Nem adtál meg intervallumot!");
+            throw new InputException("Nem adtál meg intervallumot!");
         } else {
             if (goodInterval(intervalString)) {
                 try {
