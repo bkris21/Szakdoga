@@ -1,6 +1,9 @@
 
 package controllers;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 
 
@@ -35,6 +38,26 @@ public class TextFields {
     public TextField getText4() {
         return text4;
     }
+
+    public void setText1(String value) {
+        this.text1.setText(value);
+    }
+
+     public void setText2(String value) {
+        this.text2.setText(value);
+    }
+
+
+      public void setText3(String value) {
+        this.text3.setText(value);
+    }
+
+      public void setText4(String value) {
+        this.text4.setText(value);
+    }
+
+   
+
     
     
     

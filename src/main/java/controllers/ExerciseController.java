@@ -2,20 +2,27 @@ package controllers;
 
 import interpolationapplication.coordinatesystem.CoordinateSystem;
 import java.net.URL;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.animation.PauseTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
@@ -23,6 +30,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -57,6 +65,9 @@ public class ExerciseController implements Initializable {
 
     @FXML
     private ToggleGroup interpolationRadioButtonGroup;
+
+    @FXML
+    private Button goButton;
 
     private List<Point> numberPairs = new ArrayList<>();
     private List<TextFields> textFields = new ArrayList<>();
@@ -141,8 +152,7 @@ public class ExerciseController implements Initializable {
 
         try {
             numberOfTextFields = Integer.parseInt(pointsNumber.getText());
-          
-            
+
             for (int i = 0; i < numberOfTextFields; i++) {
                 TextField fieldX = new TextField();
                 TextField fieldY = new TextField();
@@ -199,6 +209,7 @@ public class ExerciseController implements Initializable {
                 } else {
 
                     readTextFields();
+                    intervalField.setText("[" + textFields.get(0).getText1().getText()+ "," + textFields.get(textFields.size() - 1).getText1().getText() + "]");
 
                 }
                 ia = new InterpolationAlgorithms((List<Point>) numberPairs);
@@ -228,36 +239,35 @@ public class ExerciseController implements Initializable {
     private void openCoordinateSystem(ActionEvent event) throws Exception {
         try {
             interval = readInterval();
-            if(!functionsButton.isSelected()){
+            if (!functionsButton.isSelected()) {
                 new CoordinateSystem(f, interval.getX(), interval.getY()).start(new Stage());
-            }else{
-               
-                Function f2= new Function("Original") {
+            } else {
+
+                Function f2 = new Function("Original") {
                     @Override
                     public double apply(double... doubles) {
-                      String function = fxTextField.getText();
-                      
-                      String newString = "";
-                     
-                      int i=0;
-                      while(function.charAt(i)!='x'){
-                          newString+=function.charAt(i);
-                          i++;
-                      }
-                      newString+=doubles[0];
-                      for(i=i+1;i<function.length();i++){
-                           newString+=function.charAt(i);
-                      }
-                      Expression exp= new ExpressionBuilder(newString).build();
-                      return exp.evaluate();
-                      
+                        String function = fxTextField.getText();
+
+                        String newString = "";
+
+                        int i = 0;
+                        while (function.charAt(i) != 'x') {
+                            newString += function.charAt(i);
+                            i++;
+                        }
+                        newString += doubles[0];
+                        for (i = i + 1; i < function.length(); i++) {
+                            newString += function.charAt(i);
+                        }
+                        Expression exp = new ExpressionBuilder(newString).build();
+                        return exp.evaluate();
+
                     }
                 };
-                new CoordinateSystem(f,f2, interval.getX(), interval.getY()).start(new Stage());
+                new CoordinateSystem(f, f2, interval.getX(), interval.getY()).start(new Stage());
             }
-            
-           
-                    } catch (NullPointerException npe) {
+
+        } catch (NullPointerException npe) {
             somethingWrong("Először nyomd meg a 'Mehet' gombot!");
         }
 
@@ -281,6 +291,7 @@ public class ExerciseController implements Initializable {
                         p = makeExpression(x, y);
                     }
                     numberPairs.add(p);
+
                 } catch (UnknownFunctionOrVariableException ufve) {
 
                     throw ufve;
@@ -291,6 +302,10 @@ public class ExerciseController implements Initializable {
 
         }
 
+        sortNumbers();
+
+       
+
         return numberPairs;
 
     }
@@ -300,7 +315,7 @@ public class ExerciseController implements Initializable {
         for (TextFields field : textFields) {
             String x = field.getText1().getText();
             String fx = fxTextField.getText();
-            fx=fx.replace("x", x);
+            fx = fx.replace("x", x);
             String d1X = field.getText3().getText();
             String d2X = field.getText4().getText();
 
@@ -360,6 +375,31 @@ public class ExerciseController implements Initializable {
         return p;
     }
 
+    private void sortNumbers() {
+        for (int i = 0; i < numberPairs.size(); i++) {
+            for (int j = 1; j < numberPairs.size() - i; j++) {
+                if (numberPairs.get(j - 1).getX() > numberPairs.get(j).getX()) {
+                    Point temp = numberPairs.get(j - 1);
+                    numberPairs.set(j - 1, numberPairs.get(j));
+                    numberPairs.set(j, temp);
+
+                    String tempX = textFields.get(j - 1).getText1().getText();
+                    String tempY = textFields.get(j - 1).getText2().getText();
+                    String tempd1X = textFields.get(j - 1).getText3().getText();
+                    String tempd2X = textFields.get(j - 1).getText4().getText();
+                    textFields.get(j - 1).setText1(textFields.get(j).getText1().getText());
+                    textFields.get(j).setText1(tempX); 
+                    textFields.get(j - 1).setText2(textFields.get(j).getText2().getText());
+                    textFields.get(j).setText2(tempY);
+                    textFields.get(j - 1).setText3(textFields.get(j).getText3().getText());
+                    textFields.get(j).setText3(tempd1X);
+                    textFields.get(j - 1).setText4(textFields.get(j).getText4().getText());
+                    textFields.get(j).setText4(tempd2X);
+                }
+            }
+        }
+    }
+
     private Point makeExpression(String first, String second, String... s) {
         Point p;
         Expression exp1 = new ExpressionBuilder(first).build();
@@ -397,4 +437,5 @@ public class ExerciseController implements Initializable {
         alert.setHeaderText(msg);
         alert.showAndWait();
     }
+
 }

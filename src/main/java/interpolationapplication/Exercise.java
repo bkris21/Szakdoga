@@ -11,7 +11,7 @@ public class Exercise extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/ExerciseFXML.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Exercise1FXML.fxml"));
         
         Scene scene = new Scene(root);
         
