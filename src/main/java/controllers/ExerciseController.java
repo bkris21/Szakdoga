@@ -263,6 +263,7 @@ public class ExerciseController implements Initializable {
             } catch (UnknownFunctionOrVariableException ufve) {
                 somethingWrong("Hiba a bevitelben!");
             }
+            
 
         }
     }
@@ -294,6 +295,8 @@ public class ExerciseController implements Initializable {
             somethingWrong(ie.getMessage());
         } catch (NullPointerException npe) {
             somethingWrong("Először nyomd meg a 'Mehet' gombot!");
+        }catch(ArithmeticException ae){
+            somethingWrong("Matematikai hiba");
         }
 
     }
@@ -367,6 +370,8 @@ public class ExerciseController implements Initializable {
                 } catch (UnknownFunctionOrVariableException ufve) {
 
                     throw ufve;
+                }catch(ArithmeticException ae){
+                    somethingWrong("Matematikai hiba");
                 }
             } else {
                 throw new InputException("Nem adtál meg minden mezőt");
@@ -404,7 +409,7 @@ public class ExerciseController implements Initializable {
                     somethingWrong("Rosszul adtad meg az intervallumot!");
                 }
             } else {
-                somethingWrong("Rosszul adtad meg az intervallumot!");
+              throw new InputException("Rosszul adtad meg az intervallumot");
 
             }
         }
