@@ -4,12 +4,12 @@ package controllers;
 import java.util.Comparator;
 
 
- public  class Point implements Comparator<Point>{
+ public  class Point{
 
         private double x;
         private double y;
-        private double d1x;
-        private double d2x;
+        private double d1x=Double.NaN;
+        private double d2x=Double.NaN;
 
         public Point(double x, double y) {
             this.x = x;
@@ -70,12 +70,6 @@ import java.util.Comparator;
    
     
 
-    @Override
-    public int compare(Point o1, Point o2) {
-        return (int)(o1.getX()-o2.getX());
-    }
-
-    
         
         
     }

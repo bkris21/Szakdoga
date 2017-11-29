@@ -140,10 +140,17 @@
             <artifactId>exp4j</artifactId>
             <version>0.4.8</version>
         </dependency>
-  
-  
-      
-
+        
+        <dependency>
+            <groupId>prettyformula</groupId>
+            <artifactId>prettyformula</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jlatex</groupId>
+            <artifactId>jlatech</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
 

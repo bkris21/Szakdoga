@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -20,20 +21,19 @@
                   <RadioButton fx:id="hermiteButton" layoutX="190.0" layoutY="6.0" mnemonicParsing="false" text="Hermite" toggleGroup="$radioGroup" />
                   <RadioButton fx:id="newtonButton" layoutX="4.0" layoutY="33.0" mnemonicParsing="false" text="Newton" toggleGroup="$radioGroup" />
                   <RadioButton fx:id="lagrangeButton" layoutX="4.0" layoutY="6.0" mnemonicParsing="false" text="Lagrange" toggleGroup="$radioGroup" />
-                  <TextField fx:id="pointsNumber" layoutX="447.0" layoutY="21.0" onAction="#getPointNumber" prefHeight="25.0" prefWidth="53.0" promptText="max 6" />
+                  <TextField fx:id="pointsNumber" layoutX="477.0" layoutY="19.0" onAction="#getPointNumber" prefHeight="31.0" prefWidth="67.0" promptText="max 6" />
                   <Label layoutX="330.0" layoutY="24.0" text="Alappontok száma:" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="316.0" prefWidth="598.0">
                <children>
                   <Label fx:id="hintLabel1" layoutX="14.0" layoutY="12.0" text="Add meg az alappont-érték párokat!:" />
-                  <Button layoutX="267.0" layoutY="280.0" mnemonicParsing="false" onAction="#openCoordinateSystem" prefHeight="38.0" prefWidth="121.0" text="Grafikus nézet" />
+                  <Button layoutX="314.0" layoutY="282.0" mnemonicParsing="false" onAction="#openCoordinateSystem" prefHeight="38.0" prefWidth="121.0" text="Grafikus nézet" />
                   <Label layoutX="29.0" layoutY="48.0" text="X:" />
                   <Label fx:id="yLabel" layoutX="29.0" layoutY="81.0" text="Y:" />
-                  <TextArea fx:id="resultText" layoutX="12.0" layoutY="218.0" prefHeight="25.0" prefWidth="423.0" />
-                  <Label layoutX="15.0" layoutY="190.0" text="A keresett polinom:" />
+                  <Label layoutX="3.0" layoutY="221.0" text="A keresett polinom:" />
                   <Button fx:id="goButton" layoutX="420.0" layoutY="54.0" mnemonicParsing="false" onAction="#goInterpolation" prefHeight="31.0" prefWidth="90.0" text="Mehet" />
-                  <TextField fx:id="intervalField" layoutX="90.0" layoutY="286.0" />
+                  <TextField fx:id="intervalField" layoutX="108.0" layoutY="285.0" />
                   <Label layoutX="15.0" layoutY="290.0" text="Intervallum:" />
                   <Label fx:id="fxLabel" layoutX="20.0" layoutY="81.0" text="F(X)=" />
                   <RadioButton fx:id="functionsButton" layoutX="474.0" layoutY="12.0" mnemonicParsing="false" text="Függvény" />
@@ -57,8 +57,9 @@
                   <TextField fx:id="fxTextField" layoutX="67.0" layoutY="80.0" />
                   <Label fx:id="firstDerivative" layoutX="18.0" layoutY="129.0" text="F'(X)" />
                   <Label fx:id="secondDerivative" layoutX="15.0" layoutY="164.0" text="F''(X)" />
-                  <TextField fx:id="resultOfInverse" layoutX="516.0" layoutY="218.0" prefHeight="25.0" prefWidth="62.0" />
-                  <Label fx:id="resultOfInverseLabel" layoutX="474.0" layoutY="222.0" text="N2(0)=" />
+                  <TextField fx:id="resultOfInverse" layoutX="522.0" layoutY="216.0" prefHeight="25.0" prefWidth="62.0" />
+                  <Label fx:id="resultOfInverseLabel" layoutX="465.0" layoutY="221.0" text="N2(0)=" />
+                  <TextArea fx:id="resultText" layoutX="153.0" layoutY="216.0" prefHeight="31.0" prefWidth="293.0" />
                </children>
             </AnchorPane>
         </items>

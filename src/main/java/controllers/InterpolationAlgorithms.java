@@ -96,7 +96,8 @@ public class InterpolationAlgorithms {
             
      return function;
     }
-
+    
+    
     public String newtonStringFunction() {
         String result = "";
         List<Double> dividedDifferences = calculateDividedDifferenceTable(xPoints, yPoints);
@@ -183,6 +184,43 @@ public class InterpolationAlgorithms {
         }
 
         return dividedDifferences;
+    }
+    
+    
+    
+    public List<Double> calculateHermiteDividedDifferenceTable(){
+         List<Double> hermiteDividedDifferences= new LinkedList<>();
+         List<Double> hermiteDividedDifferncesX=new LinkedList<>();
+       
+         
+        for(Point p :points){
+            hermiteDividedDifferncesX.add(p.getX());
+            hermiteDividedDifferences.add(p.getY());
+            if(p.getD1x()!=Double.NaN){
+                hermiteDividedDifferncesX.add(p.getX());
+                hermiteDividedDifferences.add(p.getY());
+            }
+            if(p.getD2x()!=Double.NaN){
+                hermiteDividedDifferncesX.add(p.getX());
+                hermiteDividedDifferences.add(p.getY());
+            }
+            
+            
+             for (int i = 1; i < hermiteDividedDifferences.size(); i++) {
+            for (int j = hermiteDividedDifferences.size() - 1; j > 0; j--) {
+                if (j - i >= 0) {
+
+                    hermiteDividedDifferences.set(j, (hermiteDividedDifferences.get(j) - hermiteDividedDifferences.get(j - 1)) / (hermiteDividedDifferncesX.get(j) -hermiteDividedDifferncesX.get(j - i)));
+                }
+            }
+        }
+
+            
+            
+        }
+         
+         
+         return hermiteDividedDifferences;
     }
 
     public double round(double value, int places) {

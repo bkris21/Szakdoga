@@ -34,8 +34,9 @@ import javafx.util.Duration;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
-import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException;
 import net.objecthunter.exp4j.function.Function;
+import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException;
+import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
 
 public class ExerciseController implements Initializable {
 
@@ -50,6 +51,8 @@ public class ExerciseController implements Initializable {
 
     @FXML
     private GridPane fields;
+    
+    
 
     @FXML
     private TextArea resultText;
@@ -99,6 +102,8 @@ public class ExerciseController implements Initializable {
                 }
 
             }
+            
+           
         });
         
         inverzButton.selectedProperty().addListener(new ChangeListener<Boolean>(){
@@ -112,6 +117,8 @@ public class ExerciseController implements Initializable {
                     resultOfInverseLabel.setVisible(false);
                }
             }
+            
+            
             
         });
 
