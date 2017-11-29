@@ -30,7 +30,7 @@ public class InterpolationAlgorithms {
             yPoints.add(p.getY());
             firstDerivatives.add(p.getD1x());
             secondDerivatives.add(p.getD2x());
-           
+
         }
     }
 
@@ -54,31 +54,6 @@ public class InterpolationAlgorithms {
 
     }
 
-    public String lagrangeStringFunction() {
-        String result = "";
-
-        for (int k = 0; k < xPoints.size(); k++) {
-            for (int i = 0; i < xPoints.size(); i++) {
-                if (i != k) {
-
-                    result += "((x-" + round(xPoints.get(i), 3) + ")/(" + (round(xPoints.get(k), 3) - round(xPoints.get(i), 3)) + "))*";
-
-                }
-
-            }
-            if (k == xPoints.size() - 1) {
-                result += yPoints.get(k);
-            } else {
-                result += yPoints.get(k) + "+";
-            }
-
-        }
-
-        result = result.replace("--", "+");
-
-        return result;
-    }
-
     public Function newtonInterpolation() {
 
         List<Double> dividedDifferences = calculateDividedDifferenceTable(xPoints, yPoints);
@@ -100,34 +75,8 @@ public class InterpolationAlgorithms {
      return function;
     }
 
-    public String newtonStringFunction() {
-        String result = "";
-        List<Double> dividedDifferences = calculateDividedDifferenceTable(xPoints, yPoints);
-        if (dividedDifferences.size() > 1) {
-            result += round(dividedDifferences.get(0), 3) + "+";
-        } else {
-            result += round(dividedDifferences.get(0), 3);
-        }
-
-        for (int k = 1; k < xPoints.size(); k++) {
-            Double mult = 1.0;
-            for (int i = 0; i < k; i++) {
-                result += "(x-" + round(xPoints.get(i), 3) + ")*";
-            }
-            if (k == xPoints.size() - 1) {
-                result += round(dividedDifferences.get(k), 3);
-            } else {
-                result += round(dividedDifferences.get(k), 3) + "+";
-            }
-        }
-
-        result = result.replace("--", "+");
-
-        return result;
-    }
-
     public Function inverseInterpolation() {
-     
+
         function = new Function("Inverse", 1) {
             @Override
             public double apply(double... doubles) {
@@ -144,35 +93,7 @@ public class InterpolationAlgorithms {
      return function;
     }
 
-    public String inverseStringFunction() {
-        String result = "";
-        List<Double> dividedDifferences = calculateDividedDifferenceTable(yPoints, xPoints);
-        if (dividedDifferences.size() > 1) {
-            result += round(dividedDifferences.get(0), 3) + "+";
-        } else {
-            result += round(dividedDifferences.get(0), 3);
-        }
-
-        for (int k = 1; k < yPoints.size(); k++) {
-            Double mult = 1.0;
-            for (int i = 0; i < k; i++) {
-                result += "(x-" + round(yPoints.get(i), 3) + ")*";
-            }
-            if (k == yPoints.size() - 1) {
-                result += round(dividedDifferences.get(k), 3);
-            } else {
-                result += round(dividedDifferences.get(k), 3) + "+";
-            }
-        }
-
-        result = result.replace("--", "+");
-
-        return result;
-    }
-    
-    
-    public Function hermiteInterpolation(){
-        
+    public Function hermiteInterpolation() {
 
         function = new Function("Hermite", 1) {
             @Override
@@ -188,34 +109,54 @@ public class InterpolationAlgorithms {
         };
             
      return function;
-    
+
     }
-
-    public String hermiteStringInterpolation() {
+    
+    
+    public String lagrangeStringFunction() {
         String result = "";
-        
-        calculateHermiteDividedDifferenceTable();
-        if (hermiteDividedDifferencesY.size() > 1) {
-            result += round(hermiteDividedDifferencesY.get(0), 3) + "+";
-        } else {
-            result += round(hermiteDividedDifferencesY.get(0), 3);
-        }
 
-        for (int k = 1; k <hermiteDividedDifferncesX.size(); k++) {
-            Double mult = 1.0;
-            for (int i = 0; i < k; i++) {
-                result += "(x-" + round(hermiteDividedDifferncesX.get(i), 3) + ")*";
+        for (int k = 0; k < xPoints.size(); k++) {
+            for (int i = 0; i < xPoints.size(); i++) {
+                if (i != k) {
+
+                    result += "((x-" + round(xPoints.get(i), 3) + ")/(" + (round(xPoints.get(k), 3) - round(xPoints.get(i), 3)) + "))*";
+
+                }
             }
-            if (k == hermiteDividedDifferncesX.size() - 1) {
-                result += round(hermiteDividedDifferencesY.get(k), 3);
+            if (k == xPoints.size() - 1) {
+                result += yPoints.get(k);
             } else {
-                result += round(hermiteDividedDifferencesY.get(k), 3) + "+";
+                result += yPoints.get(k) + "+";
             }
+
         }
 
         result = result.replace("--", "+");
 
         return result;
+    }
+
+    public String newtonStringFunction() {
+
+        List<Double> dividedDifferences = calculateDividedDifferenceTable(xPoints, yPoints);
+
+        return newtonStyleStringInterpolation(xPoints, dividedDifferences);
+    }
+
+
+    public String inverseStringFunction() {
+        String result = "";
+        List<Double> dividedDifferences = calculateDividedDifferenceTable(yPoints, xPoints);
+
+        return newtonStyleStringInterpolation(yPoints, dividedDifferences);
+    }
+
+    public String hermiteStringInterpolation() {
+
+        calculateHermiteDividedDifferenceTable();
+
+        return newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
     }
 
     public List<Double> calculateDividedDifferenceTable(List<Double> xPoints, List<Double> yPoints) {
@@ -236,7 +177,7 @@ public class InterpolationAlgorithms {
 
     public void calculateHermiteDividedDifferenceTable() {
 
-      uplodeHermiteLists();
+        uplodeHermiteLists();
 
         for (int i = 1; i < hermiteDividedDifferencesY.size(); i++) {
             for (int j = hermiteDividedDifferencesY.size() - 1; j > 0; j--) {
@@ -263,15 +204,40 @@ public class InterpolationAlgorithms {
             }
         }
 
-       
     }
-    
-    
-    private void uplodeHermiteLists(){
+
+    public String newtonStyleStringInterpolation(List<Double> xs, List<Double> ys) {
+
+        String result = "";
+
+        if (ys.size() > 1) {
+            result += round(ys.get(0), 3) + "+";
+        } else {
+            result += round(ys.get(0), 3);
+        }
+
+        for (int k = 1; k < xs.size(); k++) {
+            Double mult = 1.0;
+            for (int i = 0; i < k; i++) {
+                result += "(x-" + round(xs.get(i), 3) + ")*";
+            }
+            if (k == xs.size() - 1) {
+                result += round(ys.get(k), 3);
+            } else {
+                result += round(ys.get(k), 3) + "+";
+            }
+        }
+
+        result = result.replace("--", "+");
+
+        return result;
+    }
+
+    private void uplodeHermiteLists() {
         hermiteDividedDifferencesY.clear();
         hermiteDividedDifferncesX.clear();
-        
-         for (Point p : points) {
+
+        for (Point p : points) {
             hermiteDividedDifferncesX.add(p.getX());
             hermiteDividedDifferencesY.add(p.getY());
             if (!Double.isNaN(p.getD1x())) {
