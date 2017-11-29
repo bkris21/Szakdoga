@@ -6,6 +6,7 @@ controllers\InterpolationAlgorithms$1.class
 interpolationapplication\Theory.class
 interpolationapplication\coordinatesystem\CoordinateSystem.class
 controllers\ExerciseController$1.class
+controllers\InterpolationAlgorithms$4.class
 interpolationapplication\coordinatesystem\CoordinateSystem$1.class
 controllers\Point.class
 controllers\InputException.class

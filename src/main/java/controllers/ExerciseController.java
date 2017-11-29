@@ -245,6 +245,8 @@ public class ExerciseController implements Initializable {
                     resultText.setText("L(x)=" + ia.lagrangeStringFunction());
                 }
                 if (newtonButton.isSelected()) {
+                    
+                 
                     f = ia.newtonInterpolation();
                     resultText.setText("N(x)=" + ia.newtonStringFunction());
                 }
@@ -262,7 +264,8 @@ public class ExerciseController implements Initializable {
                      
                 }
                 if (hermiteButton.isSelected()) {
-
+                  f=ia.hermiteInterpolation();
+                  resultText.setText("H(x)=" + ia.hermiteStringInterpolation());
                 }
 
             } catch (InputException ie) {
