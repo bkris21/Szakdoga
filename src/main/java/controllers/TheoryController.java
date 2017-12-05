@@ -41,6 +41,7 @@ public class TheoryController implements Initializable {
     
      @FXML
     private void newtoneTheoryAction(ActionEvent event) throws Exception {
+            readTextFromFile("Newton.htm");
             mainButton.setText("Newton interpoláció");
     }
     

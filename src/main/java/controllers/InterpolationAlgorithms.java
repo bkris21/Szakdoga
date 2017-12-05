@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
@@ -111,8 +112,7 @@ public class InterpolationAlgorithms {
      return function;
 
     }
-    
-    
+
     public String lagrangeStringFunction() {
         String result = "";
 
@@ -141,15 +141,23 @@ public class InterpolationAlgorithms {
 
         List<Double> dividedDifferences = calculateDividedDifferenceTable(xPoints, yPoints);
 
-        return newtonStyleStringInterpolation(xPoints, dividedDifferences);
-    }
+        String s = newtonStyleStringInterpolation(xPoints, dividedDifferences);
 
+        s = s.replace("^1", "");
+
+        return s;
+    }
 
     public String inverseStringFunction() {
         String result = "";
         List<Double> dividedDifferences = calculateDividedDifferenceTable(yPoints, xPoints);
 
-        return newtonStyleStringInterpolation(yPoints, dividedDifferences);
+        String s = newtonStyleStringInterpolation(yPoints, dividedDifferences);
+
+        s = s.replace("^1)", "");
+        s = s.replace("((", "(");
+
+        return s;
     }
 
     public String hermiteStringInterpolation() {
@@ -216,10 +224,16 @@ public class InterpolationAlgorithms {
             result += round(ys.get(0), 3);
         }
 
+        int db = 1;
         for (int k = 1; k < xs.size(); k++) {
-            Double mult = 1.0;
             for (int i = 0; i < k; i++) {
-                result += "(x-" + round(xs.get(i), 3) + ")*";
+                if (xs.get(i).equals(xs.get(i + 1)) && i + 1 != k) {
+                    db++;
+                } else {
+                    result += "((x-" + round(xs.get(i), 3) + ")^" + db + ")*";
+                    db = 1;
+                }
+
             }
             if (k == xs.size() - 1) {
                 result += round(ys.get(k), 3);
@@ -229,6 +243,7 @@ public class InterpolationAlgorithms {
         }
 
         result = result.replace("--", "+");
+        result = result.replace("-+", "-");
 
         return result;
     }
@@ -252,6 +267,26 @@ public class InterpolationAlgorithms {
             }
 
         }
+    }
+
+    private String derivativeHermite(String s) {
+        String result = "";
+        
+       
+        int i=0;
+        while(s.charAt(i)!=')'){
+            i++;
+        }
+        result+=s.charAt(i+1) ;
+       
+        return result;
+
+    }
+
+    private String calculateDerivative(String f) {
+        String fdx = "";
+
+        return fdx;
     }
 
     public double round(double value, int places) {

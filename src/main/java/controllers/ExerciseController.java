@@ -380,8 +380,10 @@ public class ExerciseController implements Initializable {
                 } catch (UnknownFunctionOrVariableException ufve) {
 
                     throw ufve;
+                }catch(IllegalArgumentException iae){
+                    somethingWrong("Rossz a bevitel!");
                 }catch(ArithmeticException ae){
-                    somethingWrong("Matematikai hiba");
+                    somethingWrong("Matematikai hiba!");
                 }
             } else {
                 throw new InputException("Nem adtál meg minden mezőt");
