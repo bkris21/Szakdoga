@@ -47,7 +47,7 @@ public class ExerciseController implements Initializable {
     private Point interval;
 
     @FXML
-    private Label yLabel, fxLabel, hintLabel1, hintLabel2, firstDerivative, secondDerivative,resultOfInverseLabel,splineX,splineDX;
+    private Label yLabel, hintLabel1,  firstDerivative, secondDerivative,resultOfInverseLabel,splineDX;
 
     @FXML
     private GridPane fields;
@@ -81,12 +81,12 @@ public class ExerciseController implements Initializable {
         resultOfInverse.setVisible(false);
         resultOfInverseLabel.setVisible(false);
          fxTextField.setVisible(false);
-        fxLabel.setVisible(false);
-        hintLabel2.setVisible(false);
+      
+      
 
         firstDerivative.setVisible(false);
         secondDerivative.setVisible(false);
-        splineX.setVisible(false);
+       
         splineDX.setVisible(false);
              
         addListenersToButtons();
@@ -154,7 +154,10 @@ public class ExerciseController implements Initializable {
                 }
             }
             if(splineButton.isSelected()){
-                textFields.get(0).getText3().setVisible(true);
+                  for (TextFields field : textFields) {
+                    field.getText3().setVisible(true);
+                    field.getText4().setVisible(false);
+                }
             }
 
         } catch (NumberFormatException nfe) {
@@ -489,22 +492,20 @@ public class ExerciseController implements Initializable {
                     for (TextFields field : textFields) {
                         field.getText2().setVisible(false);
                     }
-                    yLabel.setVisible(false);
-                    hintLabel1.setVisible(false);
-                    splineX.setVisible(false);
-                    fxLabel.setVisible(true);
+                    yLabel.setText("F(x)=");
+                    hintLabel1.setText("Add meg az alappontokat és a függvényt!"); 
                     fxTextField.setVisible(true);
-                    hintLabel2.setVisible(true);
+                  
                     
                 } else {
                     for (TextFields textField : textFields) {
                         textField.getText2().setVisible(true);
                     }
-                    yLabel.setVisible(true);
-                    hintLabel1.setVisible(true);
+                    yLabel.setText("Y:");
+                    hintLabel1.setText("Add meg az alappont-érték párokat!");
                     fxTextField.setVisible(false);
-                    fxLabel.setVisible(false);
-                    hintLabel2.setVisible(false);
+                  
+                  
                 }
             }
         });
@@ -517,31 +518,36 @@ public class ExerciseController implements Initializable {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
               if(newValue){
                     splineDX.setVisible(true);
-                    splineX.setVisible(true);
-                    yLabel.setVisible(false);
+                    if(!functionsButton.isSelected()){
+                    yLabel.setText("S(X):");
+                    }else{
+                        yLabel.setText("F(X)="); 
+                    }
                     firstDerivative.setVisible(false);
                     secondDerivative.setVisible(false);
-                    int i=0;
-                     for (TextFields field : textFields) {
-                        if(i==0){                         
+                   
+                     for (TextFields field : textFields) {                                           
                         field.getText3().setVisible(true);
-                        }
-                       
-                        field.getText4().setVisible(false);
-                        i++;
-                    }
+                         field.getText4().setVisible(false);
+                        }                   
+                    
               }else{
                     splineDX.setVisible(false);
-                    splineX.setVisible(false);
+                  
                      int i=0;
-                     for (TextFields field : textFields) {
-                        if(i==0){                         
+                     for (TextFields field : textFields) {            
                         field.getText3().setVisible(false);
                         }
+                     if(!functionsButton.isSelected()){
+                    yLabel.setText("Y:");
+                    }else{
+                        yLabel.setText("F(X)="); 
+                    }
+                     
                      }
                     
-                    yLabel.setVisible(true);
-              }
+                  
+              
             }
         });
         

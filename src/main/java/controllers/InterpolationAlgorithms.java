@@ -165,7 +165,7 @@ public class InterpolationAlgorithms {
         calculateHermiteDividedDifferenceTable();
         
         String f =newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
-        String h = calculateDerivative(f);
+        String h = calculateDerivativeSb(f);
 
         return f;
     }
@@ -247,6 +247,8 @@ public class InterpolationAlgorithms {
 
         result = result.replace("--", "+");
         result = result.replace("-+", "-");
+         result = result.replace("^1", "");
+        
 
         return result;
     }
@@ -273,7 +275,7 @@ public class InterpolationAlgorithms {
     }
 
     
-    private String calculateDerivative(String f) {
+    private String calculateDerivativeSa(String f) {
         String fdx = "";
         
         String[] s = f.split("[+]");
@@ -285,11 +287,30 @@ public class InterpolationAlgorithms {
         fdx+=firstDegree[1]+"+"+secondDegree[1]+"*2*"+summa[0];
         fdx=fdx.replace("((", "(");
         
+        
+        
+        return fdx;
+    }
+    
+    
+    private String calculateDerivativeSb(String f){
+        String fdx = "";
+        
+        String[] s = f.split("[+]");
+        String[] firstDegree = s[1].split("[*]");
+        String[] secondDegree=s[2].split("[*]");
+       
+        
+      
+        fdx+=firstDegree[1]+"+("+secondDegree[0]+"+"+secondDegree[1]+")*"+secondDegree[2];
+        
+        fdx=fdx.replace("^1", "");
+        
         System.out.println(fdx);
         
         return fdx;
     }
-
+    
     public double round(double value, int places) {
 
         BigDecimal num = new BigDecimal(value);
