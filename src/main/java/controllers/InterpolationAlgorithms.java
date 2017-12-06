@@ -163,8 +163,11 @@ public class InterpolationAlgorithms {
     public String hermiteStringInterpolation() {
 
         calculateHermiteDividedDifferenceTable();
+        
+        String f =newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
+        String h = calculateDerivative(f);
 
-        return newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
+        return f;
     }
 
     public List<Double> calculateDividedDifferenceTable(List<Double> xPoints, List<Double> yPoints) {
@@ -269,23 +272,21 @@ public class InterpolationAlgorithms {
         }
     }
 
-    private String derivativeHermite(String s) {
-        String result = "";
-        
-       
-        int i=0;
-        while(s.charAt(i)!=')'){
-            i++;
-        }
-        result+=s.charAt(i+1) ;
-       
-        return result;
-
-    }
-
+    
     private String calculateDerivative(String f) {
         String fdx = "";
-
+        
+        String[] s = f.split("[+]");
+        String[] firstDegree = s[1].split("[*]");
+        String[] secondDegree=s[2].split("[*]");
+        String[] summa = secondDegree[0].split("\\^");
+        
+        
+        fdx+=firstDegree[1]+"+"+secondDegree[1]+"*2*"+summa[0];
+        fdx=fdx.replace("((", "(");
+        
+        System.out.println(fdx);
+        
         return fdx;
     }
 

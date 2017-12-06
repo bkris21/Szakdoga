@@ -47,7 +47,7 @@ public class ExerciseController implements Initializable {
     private Point interval;
 
     @FXML
-    private Label yLabel, fxLabel, hintLabel1, hintLabel2, firstDerivative, secondDerivative,resultOfInverseLabel;
+    private Label yLabel, fxLabel, hintLabel1, hintLabel2, firstDerivative, secondDerivative,resultOfInverseLabel,splineX,splineDX;
 
     @FXML
     private GridPane fields;
@@ -64,7 +64,7 @@ public class ExerciseController implements Initializable {
     private TextField intervalField,resultOfInverse;
 
     @FXML
-    private RadioButton lagrangeButton,  newtonButton, inverzButton, hermiteButton, functionsButton;
+    private RadioButton lagrangeButton,  newtonButton, inverzButton, hermiteButton, functionsButton,splineButton;
 
     @FXML
     private ToggleGroup interpolationRadioButtonGroup;
@@ -80,90 +80,34 @@ public class ExerciseController implements Initializable {
         interpolationRadioButtonGroup = new ToggleGroup();
         resultOfInverse.setVisible(false);
         resultOfInverseLabel.setVisible(false);
+         fxTextField.setVisible(false);
+        fxLabel.setVisible(false);
+        hintLabel2.setVisible(false);
 
-        hermiteButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    firstDerivative.setVisible(true);
-                    secondDerivative.setVisible(true);
-                    for (TextFields field : textFields) {
-                        field.getText3().setVisible(true);
-                        field.getText4().setVisible(true);
-                    }
-
-                } else {
-                    firstDerivative.setVisible(false);
-                    secondDerivative.setVisible(false);
-                    for (TextFields field : textFields) {
-                        field.getText3().setVisible(false);
-                        field.getText4().setVisible(false);
-                    }
-                }
-
-            }
-            
-           
-        });
-        
-        inverzButton.selectedProperty().addListener(new ChangeListener<Boolean>(){
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-               if(newValue){
-                   resultOfInverse.setVisible(true);
-                    resultOfInverseLabel.setVisible(true);
-               }else{
-                   resultOfInverse.setVisible(false);
-                    resultOfInverseLabel.setVisible(false);
-               }
-            }
-            
-            
-            
-        });
-
-        functionsButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    for (TextFields field : textFields) {
-                        field.getText2().setVisible(false);
-                    }
-                    yLabel.setVisible(false);
-                    hintLabel1.setVisible(false);
-                    fxLabel.setVisible(true);
-                    fxTextField.setVisible(true);
-                    hintLabel2.setVisible(true);
-                } else {
-                    for (TextFields textField : textFields) {
-                        textField.getText2().setVisible(true);
-                    }
-                    yLabel.setVisible(true);
-                    hintLabel1.setVisible(true);
-                    fxTextField.setVisible(false);
-                    fxLabel.setVisible(false);
-                    hintLabel2.setVisible(false);
-                }
-            }
-        });
+        firstDerivative.setVisible(false);
+        secondDerivative.setVisible(false);
+        splineX.setVisible(false);
+        splineDX.setVisible(false);
+             
+        addListenersToButtons();
 
         lagrangeButton.setToggleGroup(interpolationRadioButtonGroup);
         newtonButton.setToggleGroup(interpolationRadioButtonGroup);
       
         inverzButton.setToggleGroup(interpolationRadioButtonGroup);
         hermiteButton.setToggleGroup(interpolationRadioButtonGroup);
+        splineButton.setToggleGroup(interpolationRadioButtonGroup);
+        
+        
+        
+        
 
         for (TextFields textField : textFields) {
             textField.getText1().setVisible(false);
             textField.getText2().setVisible(false);
         }
 
-        fxTextField.setVisible(false);
-        fxLabel.setVisible(false);
-        hintLabel2.setVisible(false);
-
-        firstDerivative.setVisible(false);
-        secondDerivative.setVisible(false);
+       
 
     }
 
@@ -208,6 +152,9 @@ public class ExerciseController implements Initializable {
                     field.getText3().setVisible(false);
                     field.getText4().setVisible(false);
                 }
+            }
+            if(splineButton.isSelected()){
+                textFields.get(0).getText3().setVisible(true);
             }
 
         } catch (NumberFormatException nfe) {
@@ -489,6 +436,116 @@ public class ExerciseController implements Initializable {
         alert.setTitle("Hiba");
         alert.setHeaderText(msg);
         alert.showAndWait();
+    }
+    
+    
+    private void addListenersToButtons(){
+        
+        hermiteButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    firstDerivative.setVisible(true);
+                    secondDerivative.setVisible(true);
+                    for (TextFields field : textFields) {
+                        field.getText3().setVisible(true);
+                        field.getText4().setVisible(true);
+                    }
+
+                } else {
+                    firstDerivative.setVisible(false);
+                    secondDerivative.setVisible(false);
+                    for (TextFields field : textFields) {
+                        field.getText3().setVisible(false);
+                        field.getText4().setVisible(false);
+                    }
+                }
+
+            }
+            
+           
+        });
+        
+        inverzButton.selectedProperty().addListener(new ChangeListener<Boolean>(){
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+               if(newValue){
+                   resultOfInverse.setVisible(true);
+                    resultOfInverseLabel.setVisible(true);
+               }else{
+                   resultOfInverse.setVisible(false);
+                    resultOfInverseLabel.setVisible(false);
+               }
+            }
+            
+            
+            
+        });
+
+        functionsButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    for (TextFields field : textFields) {
+                        field.getText2().setVisible(false);
+                    }
+                    yLabel.setVisible(false);
+                    hintLabel1.setVisible(false);
+                    splineX.setVisible(false);
+                    fxLabel.setVisible(true);
+                    fxTextField.setVisible(true);
+                    hintLabel2.setVisible(true);
+                    
+                } else {
+                    for (TextFields textField : textFields) {
+                        textField.getText2().setVisible(true);
+                    }
+                    yLabel.setVisible(true);
+                    hintLabel1.setVisible(true);
+                    fxTextField.setVisible(false);
+                    fxLabel.setVisible(false);
+                    hintLabel2.setVisible(false);
+                }
+            }
+        });
+        
+        
+        
+        splineButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+              if(newValue){
+                    splineDX.setVisible(true);
+                    splineX.setVisible(true);
+                    yLabel.setVisible(false);
+                    firstDerivative.setVisible(false);
+                    secondDerivative.setVisible(false);
+                    int i=0;
+                     for (TextFields field : textFields) {
+                        if(i==0){                         
+                        field.getText3().setVisible(true);
+                        }
+                       
+                        field.getText4().setVisible(false);
+                        i++;
+                    }
+              }else{
+                    splineDX.setVisible(false);
+                    splineX.setVisible(false);
+                     int i=0;
+                     for (TextFields field : textFields) {
+                        if(i==0){                         
+                        field.getText3().setVisible(false);
+                        }
+                     }
+                    
+                    yLabel.setVisible(true);
+              }
+            }
+        });
+        
+        
     }
 
 }

@@ -10,5 +10,6 @@
    <children>
       <Button id="theory" layoutX="54.0" layoutY="51.0" mnemonicParsing="false" onAction="#buttonActionTheory" prefHeight="48.0" prefWidth="86.0" text="Elmélet" />
       <Button layoutX="178.0" layoutY="51.0" mnemonicParsing="false" onAction="#buttonActionExercise" prefHeight="48.0" prefWidth="93.0" text="Gyakorlat" />
+      <Label layoutX="93.0" layoutY="14.0" text="Interpolációs felatok" />
    </children>
 </AnchorPane>
