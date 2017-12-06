@@ -222,6 +222,10 @@ public class ExerciseController implements Initializable {
                 somethingWrong(ie.getMessage());
             } catch (UnknownFunctionOrVariableException ufve) {
                 somethingWrong("Hiba a bevitelben!");
+            } catch(NumberFormatException nfe){
+                somethingWrong("Matematikai Hiba!");
+            }catch (ArithmeticException ae){
+                 somethingWrong("Matematikai Hiba");
             }
             
 
@@ -271,9 +275,9 @@ public class ExerciseController implements Initializable {
 
             if (!isEmptyString(x) && !isEmptyString(y)) {
                 try {
-                    if (hermiteButton.isSelected() && !isEmptyString(d1X) && !isEmptyString(d2X)) {
+                    if (hermiteButton.isSelected()  && !isEmptyString(d1X) && !isEmptyString(d2X)) {
                         p = makeExpression(x, y, d1X, d2X);
-                    } else if (hermiteButton.isSelected() && !isEmptyString(d1X)) {
+                    } else if ((hermiteButton.isSelected() || splineButton.isSelected()) && !isEmptyString(d1X)) {
                         p = makeExpression(x, y, d1X);
                     } else {
                         p = makeExpression(x, y);
@@ -303,6 +307,17 @@ public class ExerciseController implements Initializable {
         }
 
         sortNumbers();
+        
+        if(splineButton.isSelected()){
+         int db = checkEdgeCondition();
+         if(db==0){
+             throw new InputException("Nem adtál meg sehol peremfeltételt!");
+         }
+         if(db>1){
+             throw new InputException("Egynél több peremfeltételt adtál meg!");
+         }
+         
+        }
 
         return numberPairs;
 
@@ -432,6 +447,16 @@ public class ExerciseController implements Initializable {
         return (s.charAt(0) == '[' || s.charAt(0) == ']')
                 && (s.charAt(s.length() - 1) == '[' || s.charAt(s.length() - 1) == ']')
                 && two.length == 2;
+    }
+    
+    private int checkEdgeCondition(){
+        int db=0;
+        for(Point p : numberPairs){
+          if(!Double.isNaN(p.getD1x())){
+              db++;
+          }  
+        }
+        return db;
     }
 
     private void somethingWrong(String msg) {

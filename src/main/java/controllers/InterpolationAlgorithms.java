@@ -143,7 +143,7 @@ public class InterpolationAlgorithms {
 
         String s = newtonStyleStringInterpolation(xPoints, dividedDifferences);
 
-        s = s.replace("^1", "");
+       
 
         return s;
     }
@@ -154,8 +154,8 @@ public class InterpolationAlgorithms {
 
         String s = newtonStyleStringInterpolation(yPoints, dividedDifferences);
 
-        s = s.replace("^1)", "");
-        s = s.replace("((", "(");
+        
+      
 
         return s;
     }
@@ -165,7 +165,7 @@ public class InterpolationAlgorithms {
         calculateHermiteDividedDifferenceTable();
         
         String f =newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
-        String h = calculateDerivativeSb(f);
+       
 
         return f;
     }
@@ -312,10 +312,11 @@ public class InterpolationAlgorithms {
     }
     
     public double round(double value, int places) {
-
+      
         BigDecimal num = new BigDecimal(value);
         num = num.setScale(places, RoundingMode.HALF_UP);
         return num.doubleValue();
+       
     }
 
 }
