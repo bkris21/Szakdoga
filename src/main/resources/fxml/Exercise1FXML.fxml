@@ -58,7 +58,7 @@
                   <Label fx:id="secondDerivative" layoutX="19.0" layoutY="163.0" text="F''(X)" />
                   <TextField fx:id="resultOfInverse" layoutX="522.0" layoutY="216.0" prefHeight="25.0" prefWidth="62.0" />
                   <Label fx:id="resultOfInverseLabel" layoutX="465.0" layoutY="221.0" text="N2(0)=" />
-                  <TextArea fx:id="resultText" layoutX="153.0" layoutY="216.0" prefHeight="31.0" prefWidth="293.0" />
+                  <TextArea fx:id="resultText" layoutX="161.0" layoutY="216.0" prefHeight="31.0" prefWidth="293.0" />
                   <Label fx:id="splineDX" layoutX="19.0" layoutY="130.0" text="S'(X):" />
                </children>
             </AnchorPane>

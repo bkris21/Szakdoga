@@ -161,9 +161,7 @@ public class InterpolationAlgorithms {
 
         String f = newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
 
-        String s = splineStringInterPolation();
-
-        System.out.println(s);
+       
 
         return f;
     }

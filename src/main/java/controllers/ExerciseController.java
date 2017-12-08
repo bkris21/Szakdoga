@@ -171,11 +171,11 @@ public class ExerciseController implements Initializable {
             try {
                 if (functionsButton.isSelected()) {
                     readWithFunctionField();
-                    intervalField.setText("[" + textFields.get(0).getText1().getText() + "," + textFields.get(textFields.size() - 1).getText1().getText() + "]");
+                    intervalField.setText("[" + textFields.get(0).getText1().getText().trim() + "," + textFields.get(textFields.size() - 1).getText1().getText().trim() + "]");
                 } else {
 
                     readTextFields();
-                    intervalField.setText("[" + textFields.get(0).getText1().getText() + "," + textFields.get(textFields.size() - 1).getText1().getText() + "]");
+                    intervalField.setText("[" + textFields.get(0).getText1().getText().trim() + "," + textFields.get(textFields.size() - 1).getText1().getText().trim() + "]");
 
                 }
                 ia = new InterpolationAlgorithms((List<Point>) numberPairs);
@@ -206,6 +206,11 @@ public class ExerciseController implements Initializable {
                     f = ia.hermiteInterpolation();
                     resultText.setText("H(x)=" + ia.hermiteStringInterpolation());
                 }
+                if(splineButton.isSelected()){
+                    resultText.setPrefHeight(93);
+                    resultText.setLayoutY(175);
+                    resultText.setText(ia.splineStringInterPolation());
+                }
 
             } catch (InputException ie) {
                 somethingWrong(ie.getMessage());
@@ -223,7 +228,6 @@ public class ExerciseController implements Initializable {
     @FXML
     private void openCoordinateSystem(ActionEvent event) throws Exception {
         try {
-
             interval = readInterval();
             if (!functionsButton.isSelected()) {
                 new CoordinateSystem(f, interval.getX(), interval.getY()).start(new Stage());
@@ -256,10 +260,10 @@ public class ExerciseController implements Initializable {
     private List<Point> readTextFields() throws InputException {
         Point p;
         for (TextFields field : textFields) {
-            String x = field.getText1().getText();
-            String y = field.getText2().getText();
-            String d1X = field.getText3().getText();
-            String d2X = field.getText4().getText();
+            String x = field.getText1().getText().trim();
+            String y = field.getText2().getText().trim();
+            String d1X = field.getText3().getText().trim();
+            String d2X = field.getText4().getText().trim();
 
             if (!isEmptyString(x) && !isEmptyString(y)) {
                 try {
@@ -296,16 +300,7 @@ public class ExerciseController implements Initializable {
 
         sortNumbers();
 
-        if (splineButton.isSelected()) {
-            int db = checkEdgeCondition();
-            if (db == 0) {
-                throw new InputException("Nem adtál meg sehol peremfeltételt!");
-            }
-            if (db > 1) {
-                throw new InputException("Egynél több peremfeltételt adtál meg!");
-            }
-
-        }
+        
 
         return numberPairs;
 
@@ -314,17 +309,17 @@ public class ExerciseController implements Initializable {
     private List<Point> readWithFunctionField() throws InputException {
         Point p;
         for (TextFields field : textFields) {
-            String x = field.getText1().getText();
-            String fx = fxTextField.getText();
+            String x = field.getText1().getText().trim();
+            String fx = fxTextField.getText().trim();
             fx = fx.replace("x", x);
-            String d1X = field.getText3().getText();
-            String d2X = field.getText4().getText();
+            String d1X = field.getText3().getText().trim();
+            String d2X = field.getText4().getText().trim();
 
             if (!isEmptyString(x) && !isEmptyString(fx)) {
                 try {
                     if (hermiteButton.isSelected() && !isEmptyString(d1X) && !isEmptyString(d2X)) {
                         p = makeExpression(x, fx, d1X, d2X);
-                    } else if (hermiteButton.isSelected() && !isEmptyString(d1X)) {
+                    } else if ((hermiteButton.isSelected() || splineButton.isSelected()) && !isEmptyString(d1X)) {
                         p = makeExpression(x, fx, d1X);
                     } else {
                         p = makeExpression(x, fx);
@@ -343,6 +338,16 @@ public class ExerciseController implements Initializable {
             }
         }
         sortNumbers();
+        if (splineButton.isSelected()) {
+            int db = checkEdgeCondition();
+            if (db == 0) {
+                throw new InputException("Nem adtál meg sehol peremfeltételt!");
+            }
+            if (db > 1) {
+                throw new InputException("Egynél több peremfeltételt adtál meg!");
+            }
+
+        }
         return numberPairs;
     }
 
@@ -523,11 +528,9 @@ public class ExerciseController implements Initializable {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
                     splineDX.setVisible(true);
-                    if (!functionsButton.isSelected()) {
-                        yLabel.setText("S(X):");
-                    } else {
-                        yLabel.setText("F(X)=");
-                    }
+                    resultText.setPrefHeight(93);
+                    resultText.setLayoutY(175);
+                    
                     firstDerivative.setVisible(false);
                     secondDerivative.setVisible(false);
 
@@ -535,20 +538,17 @@ public class ExerciseController implements Initializable {
                         field.getText3().setVisible(true);
                         field.getText4().setVisible(false);
                     }
-                    resultLabel.setText("A keresett spline:");
+                    resultLabel.setText("A keresett spline, S(x)=");
 
                 } else {
                     splineDX.setVisible(false);
-
-                    int i = 0;
+                    resultText.setPrefHeight(31);
+                    resultText.setLayoutY(216);
+                  
                     for (TextFields field : textFields) {
                         field.getText3().setVisible(false);
                     }
-                    if (!functionsButton.isSelected()) {
-                        yLabel.setText("Y:");
-                    } else {
-                        yLabel.setText("F(X)=");
-                    }
+                  
                     resultLabel.setText("A keresett polinom:");
 
                 }
