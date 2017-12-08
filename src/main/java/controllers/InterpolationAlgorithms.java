@@ -1,13 +1,13 @@
 package controllers;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
+
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
@@ -15,12 +15,12 @@ import net.objecthunter.exp4j.function.Function;
 
 public class InterpolationAlgorithms {
 
-    private List<Point> points;
+    private final List<Point> points;
     private Function function;
-    private List<Double> xPoints = new ArrayList<>();
-    private List<Double> yPoints = new ArrayList<>();
-    private List<Double> firstDerivatives = new ArrayList<>();
-    private List<Double> secondDerivatives = new ArrayList<>();
+    private final List<Double> xPoints = new ArrayList<>();
+    private final List<Double> yPoints = new ArrayList<>();
+    private final List<Double> firstDerivatives = new ArrayList<>();
+    private final List<Double> secondDerivatives = new ArrayList<>();
     List<Double> hermiteDividedDifferencesY = new LinkedList<>();
     List<Double> hermiteDividedDifferncesX = new LinkedList<>();
 
@@ -143,8 +143,6 @@ public class InterpolationAlgorithms {
 
         String s = newtonStyleStringInterpolation(xPoints, dividedDifferences);
 
-       
-
         return s;
     }
 
@@ -154,20 +152,78 @@ public class InterpolationAlgorithms {
 
         String s = newtonStyleStringInterpolation(yPoints, dividedDifferences);
 
-        
-      
-
         return s;
     }
 
     public String hermiteStringInterpolation() {
 
-        calculateHermiteDividedDifferenceTable();
-        
-        String f =newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
-       
+        calculateHermiteDividedDifferenceTable(hermiteDividedDifferncesX, hermiteDividedDifferencesY,points);
+
+        String f = newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
+
+        String s = splineStringInterPolation();
+
+        System.out.println(s);
 
         return f;
+    }
+
+    public String splineStringInterPolation() {
+        String s = "";
+        int i = 0;
+        while (Double.isNaN(points.get(i).getD1x())) {
+            i++;
+        }
+        List<Point> splineIntervallPoints = new ArrayList<>();
+        Double derivativeValue;
+        String pI;
+        for(int j=i;j>0;j--){
+            splineIntervallPoints.clear();
+            splineIntervallPoints.add(points.get(j-1));
+            splineIntervallPoints.add(points.get(j));
+
+            uplodeHermiteLists(hermiteDividedDifferncesX, hermiteDividedDifferencesY, splineIntervallPoints);
+            calculateHermiteDividedDifferenceTable(hermiteDividedDifferncesX, hermiteDividedDifferencesY, splineIntervallPoints);
+            
+            pI = newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
+            s += pI + "   ["+points.get(j-1).getX()+","+points.get(j).getX()+"]"+'\n';
+           
+           String derivative = calculateDerivativeSb(pI);
+            derivative = derivative.replace("x", "" + points.get(j - 1).getX());
+
+            Expression exp = new ExpressionBuilder(derivative).build();
+            derivativeValue = exp.evaluate();
+
+            points.get(j - 1).setD1x(derivativeValue);
+        }
+         
+        s=sortSpline(s);
+        
+        for (int j = i; j < points.size() - 1; j++) {
+            splineIntervallPoints.clear();
+            splineIntervallPoints.add(points.get(j));
+            splineIntervallPoints.add(points.get(j + 1));
+            
+
+            uplodeHermiteLists(hermiteDividedDifferncesX, hermiteDividedDifferencesY, splineIntervallPoints);
+            calculateHermiteDividedDifferenceTable(hermiteDividedDifferncesX, hermiteDividedDifferencesY, splineIntervallPoints);
+           
+            pI = newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
+             s += pI + "   ["+points.get(j).getX()+","+points.get(j+1).getX()+"]"+'\n';
+
+            String derivative = calculateDerivativeSa(pI);
+            derivative = derivative.replace("x", "" + points.get(j + 1).getX());
+
+            Expression exp = new ExpressionBuilder(derivative).build();
+            derivativeValue = exp.evaluate();
+
+            points.get(j + 1).setD1x(derivativeValue);
+
+        }
+        
+       
+
+        return s;
     }
 
     public List<Double> calculateDividedDifferenceTable(List<Double> xPoints, List<Double> yPoints) {
@@ -186,9 +242,9 @@ public class InterpolationAlgorithms {
         return dividedDifferences;
     }
 
-    public void calculateHermiteDividedDifferenceTable() {
+    public void calculateHermiteDividedDifferenceTable(List<Double> hermiteDividedDifferncesX, List<Double> hermiteDividedDifferencesY,List<Point> points) {
 
-        uplodeHermiteLists();
+        uplodeHermiteLists(hermiteDividedDifferncesX, hermiteDividedDifferencesY, points);
 
         for (int i = 1; i < hermiteDividedDifferencesY.size(); i++) {
             for (int j = hermiteDividedDifferencesY.size() - 1; j > 0; j--) {
@@ -245,15 +301,13 @@ public class InterpolationAlgorithms {
             }
         }
 
-        result = result.replace("--", "+");
         result = result.replace("-+", "-");
-         result = result.replace("^1", "");
-        
+        result = result.replace("^1", "");
 
         return result;
     }
 
-    private void uplodeHermiteLists() {
+    private void uplodeHermiteLists(List<Double> hermiteDividedDifferncesX, List<Double> hermiteDividedDifferencesY, List<Point> points) {
         hermiteDividedDifferencesY.clear();
         hermiteDividedDifferncesX.clear();
 
@@ -274,49 +328,62 @@ public class InterpolationAlgorithms {
         }
     }
 
-    
     private String calculateDerivativeSa(String f) {
         String fdx = "";
-        
+
         String[] s = f.split("[+]");
+        
         String[] firstDegree = s[1].split("[*]");
-        String[] secondDegree=s[2].split("[*]");
+        String[] secondDegree = s[2].split("[*]");
+
         String[] summa = secondDegree[0].split("\\^");
-        
-        
-        fdx+=firstDegree[1]+"+"+secondDegree[1]+"*2*"+summa[0];
-        fdx=fdx.replace("((", "(");
-        
-        
-        
+
+      
+        fdx += firstDegree[1] + "+" + secondDegree[1] + "*2*" + summa[0];
+        fdx = fdx.replace("((", "(");
+
         return fdx;
     }
-    
-    
-    private String calculateDerivativeSb(String f){
+
+    private String calculateDerivativeSb(String f) {
         String fdx = "";
-        
+
         String[] s = f.split("[+]");
         String[] firstDegree = s[1].split("[*]");
-        String[] secondDegree=s[2].split("[*]");
-       
+        String[] secondDegree = s[2].split("[*]");
         
       
-        fdx+=firstDegree[1]+"+("+secondDegree[0]+"+"+secondDegree[1]+")*"+secondDegree[2];
+        fdx += firstDegree[1] + "+(" + secondDegree[0] + "+" + secondDegree[1] + ")*" + secondDegree[2];
+
+        fdx = fdx.replace("^1", "");
+
         
-        fdx=fdx.replace("^1", "");
-        
-        System.out.println(fdx);
-        
+
         return fdx;
     }
-    
+
     public double round(double value, int places) {
-      
+
         BigDecimal num = new BigDecimal(value);
         num = num.setScale(places, RoundingMode.HALF_UP);
         return num.doubleValue();
-       
+
+    }
+    
+    private String sortSpline(String spline){
+        
+        String s="";
+        String[] split = spline.split("\\n");
+        
+        for(int i=split.length-1;i>=0;i--) {
+            
+            s+=split[i]+'\n';
+        }
+        
+        
+        return s;
+        
+        
     }
 
 }

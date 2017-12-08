@@ -30,9 +30,9 @@
                <children>
                   <Label fx:id="hintLabel1" layoutX="14.0" layoutY="12.0" text="Add meg az alappont-érték párokat!:" />
                   <Button layoutX="314.0" layoutY="282.0" mnemonicParsing="false" onAction="#openCoordinateSystem" prefHeight="38.0" prefWidth="121.0" text="Grafikus nézet" />
-                  <Label layoutX="29.0" layoutY="48.0" text="X:" />
-                  <Label fx:id="yLabel" layoutX="29.0" layoutY="81.0" text="Y:" />
-                  <Label layoutX="3.0" layoutY="221.0" text="A keresett polinom:" />
+                  <Label layoutX="23.0" layoutY="44.0" text="X:" />
+                  <Label fx:id="yLabel" layoutX="23.0" layoutY="85.0" text="Y:" />
+                  <Label fx:id="resultLabel" layoutX="3.0" layoutY="221.0" text="A keresett polinom:" />
                   <Button fx:id="goButton" layoutX="420.0" layoutY="54.0" mnemonicParsing="false" onAction="#goInterpolation" prefHeight="31.0" prefWidth="90.0" text="Mehet" />
                   <TextField fx:id="intervalField" layoutX="108.0" layoutY="285.0" />
                   <Label layoutX="15.0" layoutY="290.0" text="Intervallum:" />
@@ -54,12 +54,12 @@
                     </rowConstraints>
                   </GridPane>
                   <TextField fx:id="fxTextField" layoutX="67.0" layoutY="80.0" />
-                  <Label fx:id="firstDerivative" layoutX="18.0" layoutY="129.0" text="F'(X)" />
-                  <Label fx:id="secondDerivative" layoutX="15.0" layoutY="164.0" text="F''(X)" />
+                  <Label fx:id="firstDerivative" layoutX="21.0" layoutY="130.0" text="F'(X)" />
+                  <Label fx:id="secondDerivative" layoutX="19.0" layoutY="163.0" text="F''(X)" />
                   <TextField fx:id="resultOfInverse" layoutX="522.0" layoutY="216.0" prefHeight="25.0" prefWidth="62.0" />
                   <Label fx:id="resultOfInverseLabel" layoutX="465.0" layoutY="221.0" text="N2(0)=" />
                   <TextArea fx:id="resultText" layoutX="153.0" layoutY="216.0" prefHeight="31.0" prefWidth="293.0" />
-                  <Label fx:id="splineDX" layoutX="26.0" layoutY="129.0" text="S'(X):" />
+                  <Label fx:id="splineDX" layoutX="19.0" layoutY="130.0" text="S'(X):" />
                </children>
             </AnchorPane>
         </items>

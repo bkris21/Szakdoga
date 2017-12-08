@@ -47,12 +47,10 @@ public class ExerciseController implements Initializable {
     private Point interval;
 
     @FXML
-    private Label yLabel, hintLabel1,  firstDerivative, secondDerivative,resultOfInverseLabel,splineDX;
+    private Label yLabel, hintLabel1, firstDerivative, secondDerivative, resultOfInverseLabel, splineDX, resultLabel;
 
     @FXML
     private GridPane fields;
-    
-    
 
     @FXML
     private TextArea resultText;
@@ -61,10 +59,10 @@ public class ExerciseController implements Initializable {
     private TextField fxTextField, pointsNumber;
 
     @FXML
-    private TextField intervalField,resultOfInverse;
+    private TextField intervalField, resultOfInverse;
 
     @FXML
-    private RadioButton lagrangeButton,  newtonButton, inverzButton, hermiteButton, functionsButton,splineButton;
+    private RadioButton lagrangeButton, newtonButton, inverzButton, hermiteButton, functionsButton, splineButton;
 
     @FXML
     private ToggleGroup interpolationRadioButtonGroup;
@@ -80,34 +78,26 @@ public class ExerciseController implements Initializable {
         interpolationRadioButtonGroup = new ToggleGroup();
         resultOfInverse.setVisible(false);
         resultOfInverseLabel.setVisible(false);
-         fxTextField.setVisible(false);
-      
-      
+        fxTextField.setVisible(false);
 
         firstDerivative.setVisible(false);
         secondDerivative.setVisible(false);
-       
+
         splineDX.setVisible(false);
-             
+
         addListenersToButtons();
 
         lagrangeButton.setToggleGroup(interpolationRadioButtonGroup);
         newtonButton.setToggleGroup(interpolationRadioButtonGroup);
-      
+
         inverzButton.setToggleGroup(interpolationRadioButtonGroup);
         hermiteButton.setToggleGroup(interpolationRadioButtonGroup);
         splineButton.setToggleGroup(interpolationRadioButtonGroup);
-        
-        
-        
-        
 
         for (TextFields textField : textFields) {
             textField.getText1().setVisible(false);
             textField.getText2().setVisible(false);
         }
-
-       
 
     }
 
@@ -153,8 +143,8 @@ public class ExerciseController implements Initializable {
                     field.getText4().setVisible(false);
                 }
             }
-            if(splineButton.isSelected()){
-                  for (TextFields field : textFields) {
+            if (splineButton.isSelected()) {
+                for (TextFields field : textFields) {
                     field.getText3().setVisible(true);
                     field.getText4().setVisible(false);
                 }
@@ -195,39 +185,37 @@ public class ExerciseController implements Initializable {
                     resultText.setText("L(x)=" + ia.lagrangeStringFunction());
                 }
                 if (newtonButton.isSelected()) {
-                    
-                 
+
                     f = ia.newtonInterpolation();
                     resultText.setText("N(x)=" + ia.newtonStringFunction());
                 }
-                if(inverzButton.isSelected()){
-                    
-                     f = ia.inverseInterpolation();
-                     resultText.setText("N~(x)=" + ia.inverseStringFunction());
-                     
-                     String s = ia.inverseStringFunction();
-                     s=s.replace("x", ""+0);
-                     Expression exp = new ExpressionBuilder(s).build();
-                     double res=exp.evaluate();
-                     
-                     resultOfInverse.setText(""+ia.round(res,3));
-                     
+                if (inverzButton.isSelected()) {
+
+                    f = ia.inverseInterpolation();
+                    resultText.setText("N~(x)=" + ia.inverseStringFunction());
+
+                    String s = ia.inverseStringFunction();
+                    s = s.replace("x", "" + 0);
+                    Expression exp = new ExpressionBuilder(s).build();
+                    double res = exp.evaluate();
+
+                    resultOfInverse.setText("" + ia.round(res, 3));
+
                 }
                 if (hermiteButton.isSelected()) {
-                  f=ia.hermiteInterpolation();
-                  resultText.setText("H(x)=" + ia.hermiteStringInterpolation());
+                    f = ia.hermiteInterpolation();
+                    resultText.setText("H(x)=" + ia.hermiteStringInterpolation());
                 }
 
             } catch (InputException ie) {
                 somethingWrong(ie.getMessage());
             } catch (UnknownFunctionOrVariableException ufve) {
                 somethingWrong("Hiba a bevitelben!");
-            } catch(NumberFormatException nfe){
+            } catch (NumberFormatException nfe) {
                 somethingWrong("Matematikai Hiba!");
-            }catch (ArithmeticException ae){
-                 somethingWrong("Matematikai Hiba");
+            } catch (ArithmeticException ae) {
+                somethingWrong("Matematikai Hiba");
             }
-            
 
         }
     }
@@ -259,7 +247,7 @@ public class ExerciseController implements Initializable {
             somethingWrong(ie.getMessage());
         } catch (NullPointerException npe) {
             somethingWrong("Először nyomd meg a 'Mehet' gombot!");
-        }catch(ArithmeticException ae){
+        } catch (ArithmeticException ae) {
             somethingWrong("Matematikai hiba");
         }
 
@@ -275,7 +263,7 @@ public class ExerciseController implements Initializable {
 
             if (!isEmptyString(x) && !isEmptyString(y)) {
                 try {
-                    if (hermiteButton.isSelected()  && !isEmptyString(d1X) && !isEmptyString(d2X)) {
+                    if (hermiteButton.isSelected() && !isEmptyString(d1X) && !isEmptyString(d2X)) {
                         p = makeExpression(x, y, d1X, d2X);
                     } else if ((hermiteButton.isSelected() || splineButton.isSelected()) && !isEmptyString(d1X)) {
                         p = makeExpression(x, y, d1X);
@@ -307,16 +295,16 @@ public class ExerciseController implements Initializable {
         }
 
         sortNumbers();
-        
-        if(splineButton.isSelected()){
-         int db = checkEdgeCondition();
-         if(db==0){
-             throw new InputException("Nem adtál meg sehol peremfeltételt!");
-         }
-         if(db>1){
-             throw new InputException("Egynél több peremfeltételt adtál meg!");
-         }
-         
+
+        if (splineButton.isSelected()) {
+            int db = checkEdgeCondition();
+            if (db == 0) {
+                throw new InputException("Nem adtál meg sehol peremfeltételt!");
+            }
+            if (db > 1) {
+                throw new InputException("Egynél több peremfeltételt adtál meg!");
+            }
+
         }
 
         return numberPairs;
@@ -345,9 +333,9 @@ public class ExerciseController implements Initializable {
                 } catch (UnknownFunctionOrVariableException ufve) {
 
                     throw ufve;
-                }catch(IllegalArgumentException iae){
+                } catch (IllegalArgumentException iae) {
                     somethingWrong("Rossz a bevitel!");
-                }catch(ArithmeticException ae){
+                } catch (ArithmeticException ae) {
                     somethingWrong("Matematikai hiba!");
                 }
             } else {
@@ -386,7 +374,7 @@ public class ExerciseController implements Initializable {
                     somethingWrong("Rosszul adtad meg az intervallumot!");
                 }
             } else {
-              throw new InputException("Rosszul adtad meg az intervallumot");
+                throw new InputException("Rosszul adtad meg az intervallumot");
 
             }
         }
@@ -448,13 +436,13 @@ public class ExerciseController implements Initializable {
                 && (s.charAt(s.length() - 1) == '[' || s.charAt(s.length() - 1) == ']')
                 && two.length == 2;
     }
-    
-    private int checkEdgeCondition(){
-        int db=0;
-        for(Point p : numberPairs){
-          if(!Double.isNaN(p.getD1x())){
-              db++;
-          }  
+
+    private int checkEdgeCondition() {
+        int db = 0;
+        for (Point p : numberPairs) {
+            if (!Double.isNaN(p.getD1x())) {
+                db++;
+            }
         }
         return db;
     }
@@ -465,10 +453,9 @@ public class ExerciseController implements Initializable {
         alert.setHeaderText(msg);
         alert.showAndWait();
     }
-    
-    
-    private void addListenersToButtons(){
-        
+
+    private void addListenersToButtons() {
+
         hermiteButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -490,24 +477,21 @@ public class ExerciseController implements Initializable {
                 }
 
             }
-            
-           
+
         });
-        
-        inverzButton.selectedProperty().addListener(new ChangeListener<Boolean>(){
+
+        inverzButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-               if(newValue){
-                   resultOfInverse.setVisible(true);
+                if (newValue) {
+                    resultOfInverse.setVisible(true);
                     resultOfInverseLabel.setVisible(true);
-               }else{
-                   resultOfInverse.setVisible(false);
+                } else {
+                    resultOfInverse.setVisible(false);
                     resultOfInverseLabel.setVisible(false);
-               }
+                }
             }
-            
-            
-            
+
         });
 
         functionsButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -518,10 +502,9 @@ public class ExerciseController implements Initializable {
                         field.getText2().setVisible(false);
                     }
                     yLabel.setText("F(x)=");
-                    hintLabel1.setText("Add meg az alappontokat és a függvényt!"); 
+                    hintLabel1.setText("Add meg az alappontokat és a függvényt!");
                     fxTextField.setVisible(true);
-                  
-                    
+
                 } else {
                     for (TextFields textField : textFields) {
                         textField.getText2().setVisible(true);
@@ -529,54 +512,50 @@ public class ExerciseController implements Initializable {
                     yLabel.setText("Y:");
                     hintLabel1.setText("Add meg az alappont-érték párokat!");
                     fxTextField.setVisible(false);
-                  
-                  
+
                 }
             }
         });
-        
-        
-        
+
         splineButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
 
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-              if(newValue){
+                if (newValue) {
                     splineDX.setVisible(true);
-                    if(!functionsButton.isSelected()){
-                    yLabel.setText("S(X):");
-                    }else{
-                        yLabel.setText("F(X)="); 
+                    if (!functionsButton.isSelected()) {
+                        yLabel.setText("S(X):");
+                    } else {
+                        yLabel.setText("F(X)=");
                     }
                     firstDerivative.setVisible(false);
                     secondDerivative.setVisible(false);
-                   
-                     for (TextFields field : textFields) {                                           
+
+                    for (TextFields field : textFields) {
                         field.getText3().setVisible(true);
-                         field.getText4().setVisible(false);
-                        }                   
-                    
-              }else{
-                    splineDX.setVisible(false);
-                  
-                     int i=0;
-                     for (TextFields field : textFields) {            
-                        field.getText3().setVisible(false);
-                        }
-                     if(!functionsButton.isSelected()){
-                    yLabel.setText("Y:");
-                    }else{
-                        yLabel.setText("F(X)="); 
+                        field.getText4().setVisible(false);
                     }
-                     
-                     }
-                    
-                  
-              
+                    resultLabel.setText("A keresett spline:");
+
+                } else {
+                    splineDX.setVisible(false);
+
+                    int i = 0;
+                    for (TextFields field : textFields) {
+                        field.getText3().setVisible(false);
+                    }
+                    if (!functionsButton.isSelected()) {
+                        yLabel.setText("Y:");
+                    } else {
+                        yLabel.setText("F(X)=");
+                    }
+                    resultLabel.setText("A keresett polinom:");
+
+                }
+
             }
         });
-        
-        
+
     }
 
 }
