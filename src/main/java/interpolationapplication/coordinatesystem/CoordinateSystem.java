@@ -60,15 +60,22 @@ public class CoordinateSystem extends Application {
             plots.add(new Plot(func, intervals.get(i).getX(), intervals.get(i).getY(), 0.001, axes, Color.ORANGE.deriveColor(0, 1, 1, 0.8)));
             i++;
         }
-        System.out.println(plots.size());
-        for (Plot p : plots) {
-            StackPane layout = new StackPane(p);
-            layout.setPadding(new Insets(20));
-            layout.setStyle("-fx-background-color: rgb(35, 39, 50);");
-            rootPane.getChildren().add(layout);
-        }
+       List<StackPane> panes = new ArrayList<>();
+       
+                  
+       
+       
+       for(int j=0;j<plots.size();j++){
+           panes.add(new StackPane(plots.get(j)));  
+       }
 
-        if (f2.getName() == "default") {
+        for(StackPane pane : panes){
+            rootPane.getChildren().add(pane);
+        }
+        
+     
+
+        if (f2.getName().equals("default")) {
             plotOfF2 = new Plot(
                     f2,
                     intervals.get(0).getX(), intervals.get(intervals.size() - 1).getY(), 0.001,
@@ -138,7 +145,7 @@ public class CoordinateSystem extends Application {
 
                 rootPane.setLayoutX(mouseEvent.getScreenX() + dragDelta.x);
                 rootPane.setLayoutY(mouseEvent.getScreenY() + dragDelta.y);
-                System.out.println((mouseEvent.getScreenX() + dragDelta.x) + " " + (mouseEvent.getScreenX() + dragDelta.y));
+               
             }
 
         });
