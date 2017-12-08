@@ -1,99 +1,104 @@
 package interpolationapplication.coordinatesystem;
 
+import controllers.Point;
+import java.util.ArrayList;
+import java.util.List;
 import net.objecthunter.exp4j.function.Function;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.geometry.*;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 import javafx.stage.Stage;
 
 public class CoordinateSystem extends Application {
 
-    Function f;
     Function f2 = new Function("default") {
         @Override
         public double apply(double... doubles) {
             return 0;
         }
     };
-    Plot plot2;
-    Plot plot1;
-    double interval1;
-    double interval2;
+
+    List<Function> functions = new ArrayList<>();
+    List<Plot> plots = new ArrayList<>();
+    Plot plotOfF2;
+    List<Point> intervals = new ArrayList<>();
     final double SCALE_DELTA = 1.1;
     private final Delta dragDelta = new Delta();
 
-    public CoordinateSystem(Function f, double i1, double i2) {
-        this.f = f;
-        interval1 = i1;
-        interval2 = i2;
+    public CoordinateSystem(List<Function> functions, List<Point> intervals) {
+        this.functions = functions;
+        this.intervals = intervals;
     }
 
-    public CoordinateSystem(Function f, Function f2, double i1, double i2) {
-        this.f = f;
+    public CoordinateSystem(List<Function> functions, Function f2, List<Point> intervals) {
+        this.functions = functions;
+        this.intervals = intervals;
         this.f2 = f2;
-        interval1 = i1;
-        interval2 = i2;
+
     }
 
     @Override
     public void start(Stage stage) throws Exception {
+       
+        StackPane rootPane = new StackPane();
+        rootPane.setStyle("-fx-background-color: rgb(35, 39, 50);");
+
         Axes axes = new Axes(
                 400, 300,
                 -10, 10, 1,
                 -10, 10, 1
         );
 
-        plot1 = new Plot(
-                f,
-                interval1, interval2, 0.001,
-                axes,
-                Color.ORANGE.deriveColor(0, 1, 1, 0.8)
-        );
+        int i = 0;
+        for (Function func : functions) {
+            plots.add(new Plot(func, intervals.get(i).getX(), intervals.get(i).getY(), 0.001, axes, Color.ORANGE.deriveColor(0, 1, 1, 0.8)));
+            i++;
+        }
+        System.out.println(plots.size());
+        for (Plot p : plots) {
+            StackPane layout = new StackPane(p);
+            layout.setPadding(new Insets(20));
+            layout.setStyle("-fx-background-color: rgb(35, 39, 50);");
+            rootPane.getChildren().add(layout);
+        }
+
         if (f2.getName() == "default") {
-            plot2 = new Plot(
+            plotOfF2 = new Plot(
                     f2,
-                    interval1, interval2, 0.001,
+                    intervals.get(0).getX(), intervals.get(intervals.size() - 1).getY(), 0.001,
                     axes,
                     Color.RED.deriveColor(0, 1, 1, 0.0)
             );
+
         } else {
-            plot2 = new Plot(
+            plotOfF2 = new Plot(
                     f2,
-                    interval1, interval2, 0.001,
+                    intervals.get(0).getX(), intervals.get(intervals.size() - 1).getY(), 0.001,
                     axes,
                     Color.RED.deriveColor(0, 1, 1, 0.4)
             );
         }
 
-      StackPane rootPane = new StackPane();
-        rootPane.setStyle("-fx-background-color: rgb(35, 39, 50);");
 
         Scene scene = new Scene(rootPane);
 
-        StackPane layout = new StackPane(plot1);
-        StackPane layout2 = new StackPane(plot2);
+       
+        StackPane layout2 = new StackPane(plotOfF2);
 
-        layout.setPadding(new Insets(20));
+        
         layout2.setPadding(new Insets(10));
-        layout.setStyle("-fx-background-color: rgb(35, 39, 50);");
+      
         layout2.setStyle("-fx-background-color: rgba(0, 100, 100, 0.1); -fx-background-radius: 0;");
 
         stage.setTitle("Grafikus nézet");
 
-        rootPane.getChildren().add(layout);
+       
         rootPane.getChildren().add(layout2);
 
         stage.setScene(scene);
@@ -130,7 +135,7 @@ public class CoordinateSystem extends Application {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 double newX = mouseEvent.getScreenX() + dragDelta.x;
-               
+
                 rootPane.setLayoutX(mouseEvent.getScreenX() + dragDelta.x);
                 rootPane.setLayoutY(mouseEvent.getScreenY() + dragDelta.y);
                 System.out.println((mouseEvent.getScreenX() + dragDelta.x) + " " + (mouseEvent.getScreenX() + dragDelta.y));

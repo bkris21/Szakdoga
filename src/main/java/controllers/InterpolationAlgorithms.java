@@ -1,6 +1,5 @@
 package controllers;
 
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -12,10 +11,12 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 import net.objecthunter.exp4j.function.Function;
+import org.apache.commons.lang.ArrayUtils;
 
 public class InterpolationAlgorithms {
 
     private final List<Point> points;
+
     private Function function;
     private final List<Double> xPoints = new ArrayList<>();
     private final List<Double> yPoints = new ArrayList<>();
@@ -105,31 +106,39 @@ public class InterpolationAlgorithms {
 
                 Expression exp = new ExpressionBuilder(func).build();
                 return exp.evaluate();
-            };
+            }
+        ;
         };
+        
+       
+        
             
      return function;
 
     }
-    
-    public List<Function> splineInterpolation(){
+
+    public List<Function> splineInterpolation() {
+
         String[] functions = splineForFunction(splineStringInterPolation());
+
         List<Function> result = new ArrayList<>();
-        
-        
-        for(String s : functions){
+
+        for (String s : functions) {
+
             function = new Function("Spline") {
-                
+
                 @Override
                 public double apply(double... doubles) {
-                  String func = s.replace("x",""+doubles[0]);
-                  Expression exp = new ExpressionBuilder(func).build();
-                  return exp.evaluate();
-                };
+                    String func = s.replace("x", "" + doubles[0]);
+                    func = func.trim();
+                    Expression exp = new ExpressionBuilder(func).build();
+                    return exp.evaluate();
+                }
+            ;
             };
             result.add(function);
         }
-      return result;
+        return result;
     }
 
     public String lagrangeStringFunction() {
@@ -176,69 +185,79 @@ public class InterpolationAlgorithms {
 
     public String hermiteStringInterpolation() {
 
-        calculateHermiteDividedDifferenceTable(hermiteDividedDifferncesX, hermiteDividedDifferencesY,points);
+        calculateHermiteDividedDifferenceTable(hermiteDividedDifferncesX, hermiteDividedDifferencesY, points);
 
         String f = newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
-
-       
 
         return f;
     }
 
     public String splineStringInterPolation() {
+
         String s = "";
+        List<Point> pointsHelp = new ArrayList<>();
+        for (int i = 0; i < points.size(); i++) {
+            pointsHelp.add(new Point(points.get(i).getX(), points.get(i).getY()));
+            pointsHelp.get(i).setD1x(points.get(i).getD1x());
+        }
+
         int i = 0;
+
         while (Double.isNaN(points.get(i).getD1x())) {
             i++;
+
         }
         List<Point> splineIntervallPoints = new ArrayList<>();
         Double derivativeValue;
         String pI;
-        for(int j=i;j>0;j--){
+
+        for (int j = i; j > 0; j--) {
             splineIntervallPoints.clear();
-            splineIntervallPoints.add(points.get(j-1));
-            splineIntervallPoints.add(points.get(j));
+            splineIntervallPoints.add(pointsHelp.get(j - 1));
+            splineIntervallPoints.add(pointsHelp.get(j));
 
             uplodeHermiteLists(hermiteDividedDifferncesX, hermiteDividedDifferencesY, splineIntervallPoints);
             calculateHermiteDividedDifferenceTable(hermiteDividedDifferncesX, hermiteDividedDifferencesY, splineIntervallPoints);
-            
+
             pI = newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
-            s += pI + "   ["+points.get(j-1).getX()+","+points.get(j).getX()+"]"+'\n';
-           
-           String derivative = calculateDerivativeSb(pI);
-            derivative = derivative.replace("x", "" + points.get(j - 1).getX());
+
+            s += pI + "   [" + pointsHelp.get(j - 1).getX() + "," + pointsHelp.get(j).getX() + "]" + "\n";
+
+            String derivative = calculateDerivativeSb(pI);
+
+            derivative = derivative.replace("x", "" + pointsHelp.get(j - 1).getX());
 
             Expression exp = new ExpressionBuilder(derivative).build();
             derivativeValue = exp.evaluate();
 
-            points.get(j - 1).setD1x(derivativeValue);
+            pointsHelp.get(j - 1).setD1x(derivativeValue);
+
         }
-         
-        s=sortSpline(s);
-        
-        for (int j = i; j < points.size() - 1; j++) {
+        if (!s.equals("")) {
+            s = sortSpline(s);
+        }
+
+        for (int j = i; j < pointsHelp.size() - 1; j++) {
             splineIntervallPoints.clear();
-            splineIntervallPoints.add(points.get(j));
-            splineIntervallPoints.add(points.get(j + 1));
-            
+            splineIntervallPoints.add(pointsHelp.get(j));
+            splineIntervallPoints.add(pointsHelp.get(j + 1));
 
             uplodeHermiteLists(hermiteDividedDifferncesX, hermiteDividedDifferencesY, splineIntervallPoints);
             calculateHermiteDividedDifferenceTable(hermiteDividedDifferncesX, hermiteDividedDifferencesY, splineIntervallPoints);
-           
+
             pI = newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
-             s += pI + "   ["+points.get(j).getX()+","+points.get(j+1).getX()+"]"+'\n';
+
+            s += pI + "   [" + pointsHelp.get(j).getX() + "," + pointsHelp.get(j + 1).getX() + "]" + "\n";
 
             String derivative = calculateDerivativeSa(pI);
-            derivative = derivative.replace("x", "" + points.get(j + 1).getX());
+            derivative = derivative.replace("x", "" + pointsHelp.get(j + 1).getX());
 
             Expression exp = new ExpressionBuilder(derivative).build();
             derivativeValue = exp.evaluate();
 
-            points.get(j + 1).setD1x(derivativeValue);
+            pointsHelp.get(j + 1).setD1x(derivativeValue);
 
         }
-        
-       
 
         return s;
     }
@@ -259,7 +278,7 @@ public class InterpolationAlgorithms {
         return dividedDifferences;
     }
 
-    public void calculateHermiteDividedDifferenceTable(List<Double> hermiteDividedDifferncesX, List<Double> hermiteDividedDifferencesY,List<Point> points) {
+    public void calculateHermiteDividedDifferenceTable(List<Double> hermiteDividedDifferncesX, List<Double> hermiteDividedDifferencesY, List<Point> points) {
 
         uplodeHermiteLists(hermiteDividedDifferncesX, hermiteDividedDifferencesY, points);
 
@@ -349,13 +368,12 @@ public class InterpolationAlgorithms {
         String fdx = "";
 
         String[] s = f.split("[+]");
-        
+
         String[] firstDegree = s[1].split("[*]");
         String[] secondDegree = s[2].split("[*]");
 
         String[] summa = secondDegree[0].split("\\^");
 
-      
         fdx += firstDegree[1] + "+" + secondDegree[1] + "*2*" + summa[0];
         fdx = fdx.replace("((", "(");
 
@@ -368,13 +386,10 @@ public class InterpolationAlgorithms {
         String[] s = f.split("[+]");
         String[] firstDegree = s[1].split("[*]");
         String[] secondDegree = s[2].split("[*]");
-        
-      
+
         fdx += firstDegree[1] + "+(" + secondDegree[0] + "+" + secondDegree[1] + ")*" + secondDegree[2];
 
         fdx = fdx.replace("^1", "");
-
-        
 
         return fdx;
     }
@@ -386,38 +401,40 @@ public class InterpolationAlgorithms {
         return num.doubleValue();
 
     }
-    
-    private String sortSpline(String spline){
-        
-        String s="";
+
+    private String sortSpline(String spline) {
+
+        String s = "";
         String[] split = spline.split("\\n");
-        
-        for(int i=split.length-1;i>=0;i--) {
-            
-            s+=split[i]+'\n';
+
+        for (int i = split.length - 1; i >= 0; i--) {
+
+            s += split[i] + "\n";
         }
-        
-        
+
         return s;
-        
-        
+
     }
-    
-    private String[] splineForFunction(String s){
-        String[] result =s.split("\\n");
+
+    private String[] splineForFunction(String s) {
+        String[] result = s.split("\\n");
+
+
         
-        for(int i=0;i<result.length;i++){
-            int j=0;
-            String help="";
-            while(result[i].charAt(j)!=' '){
-               help+=result[i].charAt(j);
-               j++;
+
+        for (int i = 0; i < result.length; i++) {
+
+            int j = 0;
+            String help = "";
+            while (result[i].charAt(j) != ' ') {
+                help += result[i].charAt(j);
+                j++;
             }
-            result[i]=help;
+
+           result[i] = help;
+
         }
-        
-        
-        
+
         return result;
     }
 

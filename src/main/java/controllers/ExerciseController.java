@@ -36,15 +36,14 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.objecthunter.exp4j.function.Function;
 import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException;
-import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
 
 public class ExerciseController implements Initializable {
 
     private InterpolationAlgorithms ia;
     private int numberOfTextFields = 0;
 
-    private Function f;
-    private Point interval;
+    private List<Function> f = new ArrayList<>();
+    private List<Point> interval = new ArrayList<>();
 
     @FXML
     private Label yLabel, hintLabel1, firstDerivative, secondDerivative, resultOfInverseLabel, splineDX, resultLabel;
@@ -181,17 +180,18 @@ public class ExerciseController implements Initializable {
                 ia = new InterpolationAlgorithms((List<Point>) numberPairs);
 
                 if (lagrangeButton.isSelected()) {
-                    f = ia.lagrangeInterpolation();
+                    f.clear();
+                    f.add(ia.lagrangeInterpolation());
                     resultText.setText("L(x)=" + ia.lagrangeStringFunction());
                 }
                 if (newtonButton.isSelected()) {
-
-                    f = ia.newtonInterpolation();
+                    f.clear();
+                    f.add(ia.newtonInterpolation());
                     resultText.setText("N(x)=" + ia.newtonStringFunction());
                 }
                 if (inverzButton.isSelected()) {
-
-                    f = ia.inverseInterpolation();
+                    f.clear();
+                    f.add(ia.inverseInterpolation());
                     resultText.setText("N~(x)=" + ia.inverseStringFunction());
 
                     String s = ia.inverseStringFunction();
@@ -203,13 +203,14 @@ public class ExerciseController implements Initializable {
 
                 }
                 if (hermiteButton.isSelected()) {
-                    f = ia.hermiteInterpolation();
+                    f.clear();
+                    f.add(ia.hermiteInterpolation());
                     resultText.setText("H(x)=" + ia.hermiteStringInterpolation());
                 }
-                if(splineButton.isSelected()){
-                    resultText.setPrefHeight(93);
-                    resultText.setLayoutY(175);
+                if (splineButton.isSelected()) {
+                    
                     resultText.setText(ia.splineStringInterPolation());
+                    f = ia.splineInterpolation();
                 }
 
             } catch (InputException ie) {
@@ -227,10 +228,17 @@ public class ExerciseController implements Initializable {
 
     @FXML
     private void openCoordinateSystem(ActionEvent event) throws Exception {
+        interval.clear();
         try {
-            interval = readInterval();
+            if(splineButton.isSelected()){
+                interval=readIntervalForSpline(resultText.getText());
+            }
+            
+            interval.add(readInterval(intervalField.getText()));
             if (!functionsButton.isSelected()) {
-                new CoordinateSystem(f, interval.getX(), interval.getY()).start(new Stage());
+                
+                new CoordinateSystem(f, interval).start(new Stage());
+
             } else {
 
                 Function f2 = new Function("Original") {
@@ -245,7 +253,7 @@ public class ExerciseController implements Initializable {
 
                     }
                 };
-                new CoordinateSystem(f, f2, interval.getX(), interval.getY()).start(new Stage());
+                new CoordinateSystem(f, f2, interval).start(new Stage());
             }
         } catch (InputException ie) {
             somethingWrong(ie.getMessage());
@@ -299,8 +307,16 @@ public class ExerciseController implements Initializable {
         }
 
         sortNumbers();
+        if (splineButton.isSelected()) {
+            int db = checkEdgeCondition();
+            if (db == 0) {
+                throw new InputException("Nem adtál meg sehol peremfeltételt!");
+            }
+            if (db > 1) {
+                throw new InputException("Egynél több peremfeltételt adtál meg!");
+            }
 
-        
+        }
 
         return numberPairs;
 
@@ -351,8 +367,7 @@ public class ExerciseController implements Initializable {
         return numberPairs;
     }
 
-    private Point readInterval() throws InputException {
-        String intervalString = intervalField.getText();
+    private Point readInterval(String intervalString) throws InputException {
         Expression exp1;
         Expression exp2;
         Point p = new Point(0, 0);
@@ -430,6 +445,29 @@ public class ExerciseController implements Initializable {
         return p;
     }
 
+    
+    private List<Point> readIntervalForSpline(String s) throws InputException{
+        List<Point> result = new ArrayList<>();
+        
+        String[] splited = s.split("\\n");
+        
+        for (int i = 0; i < splited.length; i++) {
+
+           
+            String help = "";
+            int j = 0;
+            while (splited[i].charAt(j) != '[') {
+               j++;
+            }
+            result.add(readInterval(splited[i].substring(j)));
+
+        }
+        
+        
+        
+        return result;
+    }
+    
     private boolean isEmptyString(String s) {
         return s == null || s.equals("");
     }
@@ -530,7 +568,7 @@ public class ExerciseController implements Initializable {
                     splineDX.setVisible(true);
                     resultText.setPrefHeight(93);
                     resultText.setLayoutY(175);
-                    
+
                     firstDerivative.setVisible(false);
                     secondDerivative.setVisible(false);
 
@@ -544,11 +582,11 @@ public class ExerciseController implements Initializable {
                     splineDX.setVisible(false);
                     resultText.setPrefHeight(31);
                     resultText.setLayoutY(216);
-                  
+
                     for (TextFields field : textFields) {
                         field.getText3().setVisible(false);
                     }
-                  
+
                     resultLabel.setText("A keresett polinom:");
 
                 }

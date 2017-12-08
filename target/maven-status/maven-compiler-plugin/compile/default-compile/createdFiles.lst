@@ -8,6 +8,7 @@ controllers\InterpolationAlgorithms$4.class
 controllers\Point.class
 interpolationapplication\coordinatesystem\CoordinateSystem$3.class
 controllers\InterpolationAlgorithms.class
+controllers\InterpolationAlgorithms$5.class
 controllers\InterpolationAlgorithms$3.class
 interpolationapplication\Exercise.class
 controllers\ExerciseController$1.class
