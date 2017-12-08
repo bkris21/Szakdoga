@@ -105,12 +105,31 @@ public class InterpolationAlgorithms {
 
                 Expression exp = new ExpressionBuilder(func).build();
                 return exp.evaluate();
-            }
-        ;
+            };
         };
             
      return function;
 
+    }
+    
+    public List<Function> splineInterpolation(){
+        String[] functions = splineForFunction(splineStringInterPolation());
+        List<Function> result = new ArrayList<>();
+        
+        
+        for(String s : functions){
+            function = new Function("Spline") {
+                
+                @Override
+                public double apply(double... doubles) {
+                  String func = s.replace("x",""+doubles[0]);
+                  Expression exp = new ExpressionBuilder(func).build();
+                  return exp.evaluate();
+                };
+            };
+            result.add(function);
+        }
+      return result;
     }
 
     public String lagrangeStringFunction() {
@@ -382,6 +401,24 @@ public class InterpolationAlgorithms {
         return s;
         
         
+    }
+    
+    private String[] splineForFunction(String s){
+        String[] result =s.split("\\n");
+        
+        for(int i=0;i<result.length;i++){
+            int j=0;
+            String help="";
+            while(result[i].charAt(j)!=' '){
+               help+=result[i].charAt(j);
+               j++;
+            }
+            result[i]=help;
+        }
+        
+        
+        
+        return result;
     }
 
 }
