@@ -254,6 +254,7 @@ public class ExerciseController implements Initializable {
                text.getText3().setText("");
                text.getText4().setText("");
                fxTextField.setText("");
+               resultText.setText("");
            }
     }
 
@@ -307,6 +308,16 @@ public class ExerciseController implements Initializable {
                 }
                 if (hermiteButton.isSelected()) {
                     f.clear();
+                    int db=0;
+                    for(TextFields field : textFields){
+                        if(!field.getText3().getText().equals("")){
+                            db++;
+                        }
+                    }
+                    
+                    if(db==0){
+                        somethingWrong("Multiplicitások megadása nélkül csak sima Newton-interpolációt kapsz!");
+                    }
                     f.add(ia.hermiteInterpolation());
                     resultText.setText("H(x)=" + ia.hermiteStringInterpolation());
                 }
