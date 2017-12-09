@@ -33,10 +33,10 @@
                   <Label layoutX="23.0" layoutY="44.0" text="X:" />
                   <Label fx:id="yLabel" layoutX="23.0" layoutY="85.0" text="Y:" />
                   <Label fx:id="resultLabel" layoutX="3.0" layoutY="221.0" text="A keresett polinom:" />
-                  <Button fx:id="goButton" layoutX="420.0" layoutY="54.0" mnemonicParsing="false" onAction="#goInterpolation" prefHeight="31.0" prefWidth="90.0" text="Mehet" />
+                  <Button fx:id="goButton" layoutX="460.0" layoutY="158.0" mnemonicParsing="false" onAction="#goInterpolation" prefHeight="31.0" prefWidth="90.0" text="Mehet" />
                   <TextField fx:id="intervalField" layoutX="108.0" layoutY="285.0" />
                   <Label layoutX="15.0" layoutY="290.0" text="Intervallum:" />
-                  <RadioButton fx:id="functionsButton" layoutX="474.0" layoutY="12.0" mnemonicParsing="false" text="Függvény" />
+                  <RadioButton fx:id="functionsButton" layoutX="466.0" layoutY="12.0" mnemonicParsing="false" text="Függvény" />
                   <GridPane fx:id="fields" hgap="10.0" layoutX="67.0" layoutY="40.0" vgap="10.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="44.0" />
@@ -60,6 +60,9 @@
                   <Label fx:id="resultOfInverseLabel" layoutX="465.0" layoutY="221.0" text="N2(0)=" />
                   <TextArea fx:id="resultText" layoutX="161.0" layoutY="216.0" prefHeight="31.0" prefWidth="293.0" />
                   <Label fx:id="splineDX" layoutX="19.0" layoutY="130.0" text="S'(X):" />
+                  <Button fx:id="addPoint" layoutX="489.0" layoutY="39.0" mnemonicParsing="false" onAction="#onClickAddPoint" text="+" />
+                  <Button fx:id="deletePoint" layoutX="488.0" layoutY="70.0" mnemonicParsing="false" onAction="#onClickDeletePoint" prefHeight="31.0" prefWidth="33.0" text="-" />
+                  <Button fx:id="clear" layoutX="473.0" layoutY="115.0" mnemonicParsing="false" onAction="#onClickClear" text="Tisztáz" />
                </children>
             </AnchorPane>
         </items>

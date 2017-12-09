@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 import javafx.animation.PauseTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 
@@ -21,6 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -67,7 +69,7 @@ public class ExerciseController implements Initializable {
     private ToggleGroup interpolationRadioButtonGroup;
 
     @FXML
-    private Button goButton;
+    private Button goButton, addPoint, deletePoint, clear;
 
     private List<Point> numberPairs = new ArrayList<>();
     private List<TextFields> textFields = new ArrayList<>();
@@ -100,58 +102,159 @@ public class ExerciseController implements Initializable {
 
     }
 
+    private void checkButtons() {
+
+        if (functionsButton.isSelected()) {
+            for (TextFields field : textFields) {
+                field.getText2().setVisible(false);
+            }
+
+        }
+
+        if (!hermiteButton.isSelected()) {
+            for (TextFields field : textFields) {
+                field.getText3().setVisible(false);
+                field.getText4().setVisible(false);
+            }
+        }
+        if (splineButton.isSelected()) {
+            for (TextFields field : textFields) {
+                field.getText3().setVisible(true);
+                field.getText4().setVisible(false);
+            }
+        }
+    }
+
     @FXML
     void getPointNumber(ActionEvent event) throws InputException {
 
-        fields.getChildren().clear();
-        textFields.clear();
-
+        
         try {
-            numberOfTextFields = Integer.parseInt(pointsNumber.getText());
 
-            for (int i = 0; i < numberOfTextFields; i++) {
+            int number = Integer.parseInt(pointsNumber.getText());
+            if (number> 6 || number < 2) {
+                somethingWrong("Túl sok vagy túl kevés alappontot adtál meg!\n(Legalább 2 legfeljebb 6)");
+                pointsNumber.setText("" + numberOfTextFields);
+            } else {
+                numberOfTextFields=number;
+                fields.getChildren().clear();
+                textFields.clear();
+        
+       
+                for (int i = 0; i < numberOfTextFields; i++) {
+                    TextField fieldX = new TextField();
+                    TextField fieldY = new TextField();
+                    TextField d1Field = new TextField();
+                    TextField d2Field = new TextField();
+                    textFields.add(new TextFields(fieldX, fieldY, d1Field, d2Field));
+
+                    fields.setConstraints(fieldX, i, 0);
+                    fields.getChildren().add(fieldX);
+
+                    fields.setConstraints(fieldY, i, 1);
+                    fields.getChildren().add(fieldY);
+
+                    fields.setConstraints(d1Field, i, 2);
+                    fields.getChildren().add(d1Field);
+
+                    fields.setConstraints(d2Field, i, 3);
+                    fields.getChildren().add(d2Field);
+                }
+                checkButtons();
+                 pointsNumber.setText("" + numberOfTextFields);
+            }
+
+        } catch (NumberFormatException nfe) {
+            somethingWrong("Egy pozitív egész számot adjál meg!");
+        }
+    }
+
+    @FXML
+    private void onClickAddPoint(ActionEvent event) {
+        
+        if (textFields.size() < 2) {
+            somethingWrong("Először a kezdeti alappontszámot add meg!");
+        } else {
+            if (textFields.size() < 6) {
+
                 TextField fieldX = new TextField();
                 TextField fieldY = new TextField();
                 TextField d1Field = new TextField();
                 TextField d2Field = new TextField();
                 textFields.add(new TextFields(fieldX, fieldY, d1Field, d2Field));
 
-                fields.setConstraints(fieldX, i, 0);
+                fields.setConstraints(fieldX, numberOfTextFields, 0);
                 fields.getChildren().add(fieldX);
 
-                fields.setConstraints(fieldY, i, 1);
+                fields.setConstraints(fieldY, numberOfTextFields, 1);
                 fields.getChildren().add(fieldY);
 
-                fields.setConstraints(d1Field, i, 2);
+                fields.setConstraints(d1Field, numberOfTextFields, 2);
                 fields.getChildren().add(d1Field);
 
-                fields.setConstraints(d2Field, i, 3);
+                fields.setConstraints(d2Field, numberOfTextFields, 3);
                 fields.getChildren().add(d2Field);
-            }
+                checkButtons();
+                numberOfTextFields++;
 
-            if (functionsButton.isSelected()) {
-                for (TextFields field : textFields) {
-                    field.getText2().setVisible(false);
-                }
-
+                pointsNumber.setText("" + numberOfTextFields);
+            } else {
+                somethingWrong("Túl sok az alappont!");
             }
-
-            if (!hermiteButton.isSelected()) {
-                for (TextFields field : textFields) {
-                    field.getText3().setVisible(false);
-                    field.getText4().setVisible(false);
-                }
-            }
-            if (splineButton.isSelected()) {
-                for (TextFields field : textFields) {
-                    field.getText3().setVisible(true);
-                    field.getText4().setVisible(false);
-                }
-            }
-
-        } catch (NumberFormatException nfe) {
-            somethingWrong("Egy pozitív egész számot adjál meg!");
         }
+    }
+
+    @FXML
+    private void onClickDeletePoint(ActionEvent event) {
+        if(numberOfTextFields==0){
+            somethingWrong("Először a kezdeti appontszámot add meg!");
+        }else{
+        if (textFields.size() < 3) {
+            somethingWrong("Legalább 2 alappont kell!");
+        } else {
+            textFields.remove(textFields.get(textFields.size() - 1));
+            numberOfTextFields--;
+            ObservableList<Node> children = fields.getChildren();
+            for (Node node : children) {
+                if (node instanceof TextField && fields.getRowIndex(node) == 0 && fields.getColumnIndex(node) == textFields.size()) {
+                    fields.getChildren().remove(node);
+                    break;
+                }
+            }
+            for (Node node : children) {
+                if (node instanceof TextField && fields.getRowIndex(node) == 1 && fields.getColumnIndex(node) == textFields.size()) {
+                    fields.getChildren().remove(node);
+                    break;
+                }
+            }
+            for (Node node : children) {
+                if (node instanceof TextField && fields.getRowIndex(node) == 2 && fields.getColumnIndex(node) == textFields.size()) {
+                    fields.getChildren().remove(node);
+                    break;
+                }
+            }
+            for (Node node : children) {
+                if (node instanceof TextField && fields.getRowIndex(node) == 3 && fields.getColumnIndex(node) == textFields.size()) {
+                    fields.getChildren().remove(node);
+                    break;
+                }
+            }
+            checkButtons();
+            pointsNumber.setText("" + numberOfTextFields);
+        }
+        }
+
+    }
+
+    @FXML
+    private void onClickClear(ActionEvent event) {
+           for(TextFields text : textFields){
+               text.getText1().setText("");
+               text.getText2().setText("");
+               text.getText3().setText("");
+               text.getText4().setText("");
+               fxTextField.setText("");
+           }
     }
 
     @FXML
@@ -208,7 +311,9 @@ public class ExerciseController implements Initializable {
                     resultText.setText("H(x)=" + ia.hermiteStringInterpolation());
                 }
                 if (splineButton.isSelected()) {
-                    
+                    if (numberOfTextFields == 2) {
+                        somethingWrong("Két alapponton csak sima Hermite-interpolációt kapsz!");
+                    }
                     resultText.setText(ia.splineStringInterPolation());
                     f = ia.splineInterpolation();
                 }
@@ -230,13 +335,13 @@ public class ExerciseController implements Initializable {
     private void openCoordinateSystem(ActionEvent event) throws Exception {
         interval.clear();
         try {
-            if(splineButton.isSelected()){
-                interval=readIntervalForSpline(resultText.getText());
+            if (splineButton.isSelected()) {
+                interval = readIntervalForSpline(resultText.getText());
             }
-            
+
             interval.add(readInterval(intervalField.getText()));
             if (!functionsButton.isSelected()) {
-                
+
                 new CoordinateSystem(f, interval).start(new Stage());
 
             } else {
@@ -445,29 +550,25 @@ public class ExerciseController implements Initializable {
         return p;
     }
 
-    
-    private List<Point> readIntervalForSpline(String s) throws InputException{
+    private List<Point> readIntervalForSpline(String s) throws InputException {
         List<Point> result = new ArrayList<>();
-        
+
         String[] splited = s.split("\\n");
-        
+
         for (int i = 0; i < splited.length; i++) {
 
-           
             String help = "";
             int j = 0;
             while (splited[i].charAt(j) != '[') {
-               j++;
+                j++;
             }
             result.add(readInterval(splited[i].substring(j)));
 
         }
-        
-        
-        
+
         return result;
     }
-    
+
     private boolean isEmptyString(String s) {
         return s == null || s.equals("");
     }
