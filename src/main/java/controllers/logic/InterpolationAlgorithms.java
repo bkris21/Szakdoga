@@ -1,4 +1,4 @@
-package controllers;
+package controllers.logic;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

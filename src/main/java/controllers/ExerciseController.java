@@ -1,5 +1,9 @@
 package controllers;
 
+import exceptions.InputException;
+import controllers.logic.TextFields;
+import controllers.logic.Point;
+import controllers.logic.InterpolationAlgorithms;
 import interpolationapplication.coordinatesystem.CoordinateSystem;
 import java.net.URL;
 
@@ -255,6 +259,7 @@ public class ExerciseController implements Initializable {
                text.getText4().setText("");
                fxTextField.setText("");
                resultText.setText("");
+               intervalField.setText("");
            }
     }
 

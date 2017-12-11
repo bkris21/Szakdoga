@@ -1,5 +1,5 @@
 
-package controllers;
+package controllers.logic;
 
 import java.util.Comparator;
 

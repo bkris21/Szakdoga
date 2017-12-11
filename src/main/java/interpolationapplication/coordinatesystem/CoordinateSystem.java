@@ -1,6 +1,6 @@
 package interpolationapplication.coordinatesystem;
 
-import controllers.Point;
+import controllers.logic.Point;
 import java.util.ArrayList;
 import java.util.List;
 import net.objecthunter.exp4j.function.Function;
@@ -8,12 +8,14 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import javafx.stage.Stage;
+import javax.swing.RootPaneContainer;
 
 public class CoordinateSystem extends Application {
 
@@ -47,8 +49,11 @@ public class CoordinateSystem extends Application {
     public void start(Stage stage) throws Exception {
        
         StackPane rootPane = new StackPane();
+        rootPane.setPadding(new Insets(20));
         rootPane.setStyle("-fx-background-color: rgb(35, 39, 50);");
-
+        
+      
+        
         Axes axes = new Axes(
                 400, 300,
                 -10, 10, 1,
@@ -93,37 +98,49 @@ public class CoordinateSystem extends Application {
         }
 
 
-        Scene scene = new Scene(rootPane);
-
+       
+       
        
         StackPane layout2 = new StackPane(plotOfF2);
 
-        
-        layout2.setPadding(new Insets(10));
-      
-        layout2.setStyle("-fx-background-color: rgba(0, 100, 100, 0.1); -fx-background-radius: 0;");
+       
 
         stage.setTitle("Grafikus nézet");
 
        
         rootPane.getChildren().add(layout2);
 
-        stage.setScene(scene);
+         Scene scene = new Scene(rootPane,430,370);
+           stage.setScene(scene);
 
+       
+       
+         
+  
         rootPane.setOnScroll(new EventHandler<ScrollEvent>() {
+            
             @Override
             public void handle(ScrollEvent event) {
                 event.consume();
-
+               
                 if (event.getDeltaY() == 0) {
                     return;
                 }
 
-                double scaleFactor = (event.getDeltaY() > 0) ? SCALE_DELTA : 1 / SCALE_DELTA;
+                double scaleFactor ;
+                
+                if(event.getDeltaY()>0){
+                    scaleFactor=SCALE_DELTA;
+                    
+                }else{
+                     scaleFactor=1/SCALE_DELTA;
+                   
+                }
 
                 if (!(rootPane.getScaleX() * scaleFactor < 1) && !(rootPane.getScaleX() * scaleFactor > 11)) {
                     rootPane.setScaleX(rootPane.getScaleX() * scaleFactor);
                     rootPane.setScaleY(rootPane.getScaleY() * scaleFactor);
+                
                 }
 
             }
@@ -142,13 +159,21 @@ public class CoordinateSystem extends Application {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 double newX = mouseEvent.getScreenX() + dragDelta.x;
-
+          
                 rootPane.setLayoutX(mouseEvent.getScreenX() + dragDelta.x);
                 rootPane.setLayoutY(mouseEvent.getScreenY() + dragDelta.y);
-               
+                System.out.println(rootPane.getLayoutX()-rootPane.getScaleX()+scene.getWidth());
+          
             }
 
         });
+        
+      
+        
+        
+        
+        
+        stage.setResizable(false);
 
         stage.show();
     }
@@ -158,5 +183,6 @@ public class CoordinateSystem extends Application {
         double x;
         double y;
     }
+    
 
 }
