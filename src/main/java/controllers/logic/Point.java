@@ -1,37 +1,34 @@
-
 package controllers.logic;
 
 import java.util.Comparator;
 
+public class Point {
 
- public  class Point{
+    private double firstPoint;
+    private double secondPoint;
+    private double d1x = Double.NaN;
+    private double d2x = Double.NaN;
 
-        private double x;
-        private double y;
-        private double d1x=Double.NaN;
-        private double d2x=Double.NaN;
+    public Point(double firstPoint, double secondPoint) {
+        this.firstPoint = firstPoint;
+        this.secondPoint = secondPoint;
+    }
 
-        public Point(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-        
+    public double getFirstPoint() {
+        return firstPoint;
+    }
 
-        public double getX() {
-            return x;
-        }
+    public double getSecondPoint() {
+        return secondPoint;
+    }
 
-        public double getY() {
-            return y;
-        }
+    public double getD1x() {
+        return d1x;
+    }
 
-        public double getD1x() {
-            return d1x;
-        }
-
-        public double getD2x() {
-            return d2x;
-        }
+    public double getD2x() {
+        return d2x;
+    }
 
     public void setD1x(double d1x) {
         this.d1x = d1x;
@@ -41,36 +38,4 @@ import java.util.Comparator;
         this.d2x = d2x;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Point other = (Point) obj;
-        if (Double.doubleToLongBits(this.x) != Double.doubleToLongBits(other.x)) {
-            return false;
-        }
-        return true;
-    }
-
-    
-
-   
-    
-
-        
-        
-    }
-
+}

@@ -20,32 +20,29 @@ public class InterpolationAlgorithms {
     private Function function;
     private final List<Double> xPoints = new ArrayList<>();
     private final List<Double> yPoints = new ArrayList<>();
-    private final List<Double> firstDerivatives = new ArrayList<>();
-    private final List<Double> secondDerivatives = new ArrayList<>();
+
     List<Double> hermiteDividedDifferencesY = new LinkedList<>();
     List<Double> hermiteDividedDifferncesX = new LinkedList<>();
 
     public InterpolationAlgorithms(List<Point> points) {
         this.points = points;
         for (Point p : points) {
-            xPoints.add(p.getX());
-            yPoints.add(p.getY());
-            firstDerivatives.add(p.getD1x());
-            secondDerivatives.add(p.getD2x());
+            xPoints.add(p.getFirstPoint());
+            yPoints.add(p.getSecondPoint());
 
         }
     }
 
-    public Function lagrangeInterpolation() {
+    public Function functionInterpolation(String s) {
 
-        function = new Function("lagrange", 1) {
+        function = new Function("InterpolationPolinom", 1) {
             @Override
             public double apply(double... doubles) {
-                String func = lagrangeStringFunction();
+                String f = s;
 
-                func = func.replace("x", "" + doubles[0]);
+                f = f.replace("x", "" + doubles[0]);
 
-                Expression exp = new ExpressionBuilder(func).build();
+                Expression exp = new ExpressionBuilder(f).build();
                 return exp.evaluate();
 
             }
@@ -53,68 +50,6 @@ public class InterpolationAlgorithms {
         };
             
      return function;
-
-    }
-
-    public Function newtonInterpolation() {
-
-        List<Double> dividedDifferences = calculateDividedDifferenceTable(xPoints, yPoints);
-
-        function = new Function("Newton", 1) {
-            @Override
-            public double apply(double... doubles) {
-                String func = newtonStringFunction();
-
-                func = func.replace("x", "" + doubles[0]);
-
-                Expression exp = new ExpressionBuilder(func).build();
-                return exp.evaluate();
-
-            }
-        ;
-        };
-            
-     return function;
-    }
-
-    public Function inverseInterpolation() {
-
-        function = new Function("Inverse", 1) {
-            @Override
-            public double apply(double... doubles) {
-                String func = inverseStringFunction();
-
-                func = func.replace("x", "" + doubles[0]);
-
-                Expression exp = new ExpressionBuilder(func).build();
-                return exp.evaluate();
-            }
-        ;
-        };
-            
-     return function;
-    }
-
-    public Function hermiteInterpolation() {
-
-        function = new Function("Hermite", 1) {
-            @Override
-            public double apply(double... doubles) {
-                String func = hermiteStringInterpolation();
-
-                func = func.replace("x", "" + doubles[0]);
-
-                Expression exp = new ExpressionBuilder(func).build();
-                return exp.evaluate();
-            }
-        ;
-        };
-        
-       
-        
-            
-     return function;
-
     }
 
     public List<Function> splineInterpolation() {
@@ -141,7 +76,7 @@ public class InterpolationAlgorithms {
         return result;
     }
 
-    public String lagrangeStringFunction() {
+    public String lagrangeStringInterpolation() {
         String result = "";
 
         for (int k = 0; k < xPoints.size(); k++) {
@@ -197,7 +132,7 @@ public class InterpolationAlgorithms {
         String s = "";
         List<Point> pointsHelp = new ArrayList<>();
         for (int i = 0; i < points.size(); i++) {
-            pointsHelp.add(new Point(points.get(i).getX(), points.get(i).getY()));
+            pointsHelp.add(new Point(points.get(i).getFirstPoint(), points.get(i).getSecondPoint()));
             pointsHelp.get(i).setD1x(points.get(i).getD1x());
         }
 
@@ -221,11 +156,11 @@ public class InterpolationAlgorithms {
 
             pI = newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
 
-            s += pI + "   [" + pointsHelp.get(j - 1).getX() + "," + pointsHelp.get(j).getX() + "]" + "\n";
+            s += pI + "   [" + pointsHelp.get(j - 1).getFirstPoint() + "," + pointsHelp.get(j).getFirstPoint() + "]" + "\n";
 
             String derivative = calculateDerivativeSb(pI);
 
-            derivative = derivative.replace("x", "" + pointsHelp.get(j - 1).getX());
+            derivative = derivative.replace("x", "" + pointsHelp.get(j - 1).getFirstPoint());
 
             Expression exp = new ExpressionBuilder(derivative).build();
             derivativeValue = exp.evaluate();
@@ -247,10 +182,10 @@ public class InterpolationAlgorithms {
 
             pI = newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
 
-            s += pI + "   [" + pointsHelp.get(j).getX() + "," + pointsHelp.get(j + 1).getX() + "]" + "\n";
+            s += pI + "   [" + pointsHelp.get(j).getFirstPoint() + "," + pointsHelp.get(j + 1).getFirstPoint() + "]" + "\n";
 
             String derivative = calculateDerivativeSa(pI);
-            derivative = derivative.replace("x", "" + pointsHelp.get(j + 1).getX());
+            derivative = derivative.replace("x", "" + pointsHelp.get(j + 1).getFirstPoint());
 
             Expression exp = new ExpressionBuilder(derivative).build();
             derivativeValue = exp.evaluate();
@@ -287,14 +222,14 @@ public class InterpolationAlgorithms {
                 if (j - i >= 0) {
                     if (i == 1 && (hermiteDividedDifferncesX.get(j) - hermiteDividedDifferncesX.get(j - i)) == 0) {
                         for (Point p1 : points) {
-                            if (p1.getX() == hermiteDividedDifferncesX.get(j)) {
+                            if (p1.getFirstPoint() == hermiteDividedDifferncesX.get(j)) {
                                 hermiteDividedDifferencesY.set(j, p1.getD1x());
                                 break;
                             }
                         }
                     } else if (i == 2 && (hermiteDividedDifferncesX.get(j) - hermiteDividedDifferncesX.get(j - i)) == 0) {
                         for (Point p1 : points) {
-                            if (p1.getX() == hermiteDividedDifferncesX.get(j)) {
+                            if (p1.getFirstPoint() == hermiteDividedDifferncesX.get(j)) {
                                 hermiteDividedDifferencesY.set(j, p1.getD2x() / 2);
                                 break;
                             }
@@ -348,17 +283,17 @@ public class InterpolationAlgorithms {
         hermiteDividedDifferncesX.clear();
 
         for (Point p : points) {
-            hermiteDividedDifferncesX.add(p.getX());
-            hermiteDividedDifferencesY.add(p.getY());
+            hermiteDividedDifferncesX.add(p.getFirstPoint());
+            hermiteDividedDifferencesY.add(p.getSecondPoint());
             if (!Double.isNaN(p.getD1x())) {
-                hermiteDividedDifferncesX.add(p.getX());
-                hermiteDividedDifferencesY.add(p.getY());
+                hermiteDividedDifferncesX.add(p.getFirstPoint());
+                hermiteDividedDifferencesY.add(p.getSecondPoint());
             }
 
             if (!Double.isNaN(p.getD2x())) {
 
-                hermiteDividedDifferncesX.add(p.getX());
-                hermiteDividedDifferencesY.add(p.getY());
+                hermiteDividedDifferncesX.add(p.getFirstPoint());
+                hermiteDividedDifferencesY.add(p.getSecondPoint());
             }
 
         }
@@ -419,9 +354,6 @@ public class InterpolationAlgorithms {
     private String[] splineForFunction(String s) {
         String[] result = s.split("\\n");
 
-
-        
-
         for (int i = 0; i < result.length; i++) {
 
             int j = 0;
@@ -431,7 +363,7 @@ public class InterpolationAlgorithms {
                 j++;
             }
 
-           result[i] = help;
+            result[i] = help;
 
         }
 

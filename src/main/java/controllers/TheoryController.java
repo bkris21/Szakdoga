@@ -21,7 +21,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 
-public class TheoryController implements Initializable {
+public class TheoryController {
     
    
     
@@ -40,23 +40,13 @@ public class TheoryController implements Initializable {
     }
     
      @FXML
-    private void newtoneTheoryAction(ActionEvent event) throws Exception {
+    private void newtonTheoryAction(ActionEvent event) throws Exception {
             readTextFromFile("Newton.htm");
             mainButton.setText("Newton interpoláció");
     }
     
     
-    
-    @FXML
-    private void zoom(){
-        
-    }
-     
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-      
-    }   
-    
+   
     public void readTextFromFile(String fileName) throws FileNotFoundException, IOException{
     
         theoryText.getEngine().load(getClass().getResource("/texts/"+fileName).toExternalForm());

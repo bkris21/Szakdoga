@@ -1,6 +1,6 @@
 package controllers;
 
-import exceptions.InputException;
+import controllers.exceptions.InputException;
 import controllers.logic.TextFields;
 import controllers.logic.Point;
 import controllers.logic.InterpolationAlgorithms;
@@ -290,17 +290,17 @@ public class ExerciseController implements Initializable {
 
                 if (lagrangeButton.isSelected()) {
                     f.clear();
-                    f.add(ia.lagrangeInterpolation());
-                    resultText.setText("L(x)=" + ia.lagrangeStringFunction());
+                    f.add(ia.functionInterpolation(ia.lagrangeStringInterpolation()));
+                    resultText.setText("L(x)=" + ia.lagrangeStringInterpolation());
                 }
                 if (newtonButton.isSelected()) {
                     f.clear();
-                    f.add(ia.newtonInterpolation());
+                    f.add(ia.functionInterpolation(ia.newtonStringFunction()));
                     resultText.setText("N(x)=" + ia.newtonStringFunction());
                 }
                 if (inverzButton.isSelected()) {
                     f.clear();
-                    f.add(ia.inverseInterpolation());
+                    f.add(ia.functionInterpolation(ia.inverseStringFunction()));
                     resultText.setText("N~(x)=" + ia.inverseStringFunction());
 
                     String s = ia.inverseStringFunction();
@@ -323,7 +323,7 @@ public class ExerciseController implements Initializable {
                     if(db==0){
                         somethingWrong("Multiplicitások megadása nélkül csak sima Newton-interpolációt kapsz!");
                     }
-                    f.add(ia.hermiteInterpolation());
+                    f.add(ia.functionInterpolation(ia.hermiteStringInterpolation()));
                     resultText.setText("H(x)=" + ia.hermiteStringInterpolation());
                 }
                 if (splineButton.isSelected()) {
@@ -396,6 +396,9 @@ public class ExerciseController implements Initializable {
 
             if (!isEmptyString(x) && !isEmptyString(y)) {
                 try {
+                    if(hermiteButton.isSelected()&& isEmptyString(d1X) && !isEmptyString(d2X)){
+                        throw new InputException("Először az első deriváltat add meg!");
+                    }
                     if (hermiteButton.isSelected() && !isEmptyString(d1X) && !isEmptyString(d2X)) {
                         p = makeExpression(x, y, d1X, d2X);
                     } else if ((hermiteButton.isSelected() || splineButton.isSelected()) && !isEmptyString(d1X)) {
@@ -406,10 +409,10 @@ public class ExerciseController implements Initializable {
                     for (Point p1 : numberPairs) {
                         if (!inverzButton.isSelected()) {
 
-                            if (p1.getX() == p.getX()) {
+                            if (p1.getFirstPoint() == p.getFirstPoint()) {
                                 throw new InputException("Kétszer adtál meg egy alappontot!");
                             }
-                        } else if (p1.getX() == p.getX() || p1.getY() == p.getY()) {
+                        } else if (p1.getFirstPoint() == p.getFirstPoint() || p1.getSecondPoint() == p.getSecondPoint()) {
                             throw new InputException("Nem monoton a függvény!");
                         }
 
@@ -525,7 +528,7 @@ public class ExerciseController implements Initializable {
     private void sortNumbers() {
         for (int i = 0; i < numberPairs.size(); i++) {
             for (int j = 1; j < numberPairs.size() - i; j++) {
-                if (numberPairs.get(j - 1).getX() > numberPairs.get(j).getX()) {
+                if (numberPairs.get(j - 1).getFirstPoint() > numberPairs.get(j).getFirstPoint()) {
                     Point temp = numberPairs.get(j - 1);
                     numberPairs.set(j - 1, numberPairs.get(j));
                     numberPairs.set(j, temp);

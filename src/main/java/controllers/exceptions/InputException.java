@@ -1,4 +1,4 @@
-package exceptions;
+package controllers.exceptions;
 
 
 public class InputException extends Exception{

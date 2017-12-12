@@ -17,7 +17,7 @@
                   <MenuButton fx:id="mainButton" layoutY="2.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="240.0" text="Tematika" AnchorPane.bottomAnchor="459.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#lagrangeTheoryAction" text="Lagrange Interpoláció" />
-                      <MenuItem mnemonicParsing="false" onAction="#newtoneTheoryAction" text="Newtone alak" />
+                      <MenuItem mnemonicParsing="false" onAction="#newtonTheoryAction" text="Newtone alak" />
                         <MenuItem mnemonicParsing="false" text="Interpoláció Csebisev -alappontokon" />
                         <MenuItem mnemonicParsing="false" text="Inverz interpoláció" />
                         <MenuItem mnemonicParsing="false" text="Hermite Interpoláció" />
