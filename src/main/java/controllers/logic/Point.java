@@ -1,7 +1,5 @@
 package controllers.logic;
 
-import java.util.Comparator;
-
 public class Point {
 
     private double firstPoint;

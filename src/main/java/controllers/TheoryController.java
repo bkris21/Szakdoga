@@ -18,7 +18,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.web.WebView;
-import javafx.stage.Stage;
 
 
 public class TheoryController {
@@ -47,7 +46,7 @@ public class TheoryController {
     
     
    
-    public void readTextFromFile(String fileName) throws FileNotFoundException, IOException{
+   private void readTextFromFile(String fileName) throws FileNotFoundException, IOException{
     
         theoryText.getEngine().load(getClass().getResource("/texts/"+fileName).toExternalForm());
                       

@@ -8,22 +8,14 @@ import interpolationapplication.coordinatesystem.CoordinateSystem;
 import java.net.URL;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-
-import java.util.LinkedHashMap;
 import java.util.List;
 
-import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.animation.PauseTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -34,9 +26,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -51,6 +43,7 @@ public class ExerciseController implements Initializable {
     private List<Function> f = new ArrayList<>();
     private List<Point> interval = new ArrayList<>();
 
+
     @FXML
     private Label yLabel, hintLabel1, firstDerivative, secondDerivative, resultOfInverseLabel, splineDX, resultLabel;
 
@@ -59,7 +52,7 @@ public class ExerciseController implements Initializable {
 
     @FXML
     private TextArea resultText;
-
+  
     @FXML
     private TextField fxTextField, pointsNumber;
 
@@ -103,7 +96,9 @@ public class ExerciseController implements Initializable {
             textField.getText1().setVisible(false);
             textField.getText2().setVisible(false);
         }
-
+     
+   
+        
     }
 
     private void checkButtons() {
@@ -129,22 +124,21 @@ public class ExerciseController implements Initializable {
         }
     }
 
+  
+
     @FXML
-    void getPointNumber(ActionEvent event) throws InputException {
+    private void getPointNumber(ActionEvent event) {
 
-        
         try {
-
             int number = Integer.parseInt(pointsNumber.getText());
-            if (number> 6 || number < 2) {
+            if (number > 6 || number < 2) {
                 somethingWrong("Túl sok vagy túl kevés alappontot adtál meg!\n(Legalább 2 legfeljebb 6)");
                 pointsNumber.setText("" + numberOfTextFields);
             } else {
-                numberOfTextFields=number;
+                numberOfTextFields = number;
                 fields.getChildren().clear();
                 textFields.clear();
-        
-       
+
                 for (int i = 0; i < numberOfTextFields; i++) {
                     TextField fieldX = new TextField();
                     TextField fieldY = new TextField();
@@ -165,7 +159,7 @@ public class ExerciseController implements Initializable {
                     fields.getChildren().add(d2Field);
                 }
                 checkButtons();
-                 pointsNumber.setText("" + numberOfTextFields);
+                pointsNumber.setText("" + numberOfTextFields);
             }
 
         } catch (NumberFormatException nfe) {
@@ -175,7 +169,7 @@ public class ExerciseController implements Initializable {
 
     @FXML
     private void onClickAddPoint(ActionEvent event) {
-        
+
         if (textFields.size() < 2) {
             somethingWrong("Először a kezdeti alappontszámot add meg!");
         } else {
@@ -210,57 +204,57 @@ public class ExerciseController implements Initializable {
 
     @FXML
     private void onClickDeletePoint(ActionEvent event) {
-        if(numberOfTextFields==0){
+        if (numberOfTextFields == 0) {
             somethingWrong("Először a kezdeti appontszámot add meg!");
-        }else{
-        if (textFields.size() < 3) {
-            somethingWrong("Legalább 2 alappont kell!");
         } else {
-            textFields.remove(textFields.get(textFields.size() - 1));
-            numberOfTextFields--;
-            ObservableList<Node> children = fields.getChildren();
-            for (Node node : children) {
-                if (node instanceof TextField && fields.getRowIndex(node) == 0 && fields.getColumnIndex(node) == textFields.size()) {
-                    fields.getChildren().remove(node);
-                    break;
+            if (textFields.size() < 3) {
+                somethingWrong("Legalább 2 alappont kell!");
+            } else {
+                textFields.remove(textFields.get(textFields.size() - 1));
+                numberOfTextFields--;
+                ObservableList<Node> children = fields.getChildren();
+                for (Node node : children) {
+                    if (node instanceof TextField && fields.getRowIndex(node) == 0 && fields.getColumnIndex(node) == textFields.size()) {
+                        fields.getChildren().remove(node);
+                        break;
+                    }
                 }
-            }
-            for (Node node : children) {
-                if (node instanceof TextField && fields.getRowIndex(node) == 1 && fields.getColumnIndex(node) == textFields.size()) {
-                    fields.getChildren().remove(node);
-                    break;
+                for (Node node : children) {
+                    if (node instanceof TextField && fields.getRowIndex(node) == 1 && fields.getColumnIndex(node) == textFields.size()) {
+                        fields.getChildren().remove(node);
+                        break;
+                    }
                 }
-            }
-            for (Node node : children) {
-                if (node instanceof TextField && fields.getRowIndex(node) == 2 && fields.getColumnIndex(node) == textFields.size()) {
-                    fields.getChildren().remove(node);
-                    break;
+                for (Node node : children) {
+                    if (node instanceof TextField && fields.getRowIndex(node) == 2 && fields.getColumnIndex(node) == textFields.size()) {
+                        fields.getChildren().remove(node);
+                        break;
+                    }
                 }
-            }
-            for (Node node : children) {
-                if (node instanceof TextField && fields.getRowIndex(node) == 3 && fields.getColumnIndex(node) == textFields.size()) {
-                    fields.getChildren().remove(node);
-                    break;
+                for (Node node : children) {
+                    if (node instanceof TextField && fields.getRowIndex(node) == 3 && fields.getColumnIndex(node) == textFields.size()) {
+                        fields.getChildren().remove(node);
+                        break;
+                    }
                 }
+                checkButtons();
+                pointsNumber.setText("" + numberOfTextFields);
             }
-            checkButtons();
-            pointsNumber.setText("" + numberOfTextFields);
-        }
         }
 
     }
 
     @FXML
     private void onClickClear(ActionEvent event) {
-           for(TextFields text : textFields){
-               text.getText1().setText("");
-               text.getText2().setText("");
-               text.getText3().setText("");
-               text.getText4().setText("");
-               fxTextField.setText("");
-               resultText.setText("");
-               intervalField.setText("");
-           }
+        for (TextFields text : textFields) {
+            text.getText1().setText("");
+            text.getText2().setText("");
+            text.getText3().setText("");
+            text.getText4().setText("");
+            fxTextField.setText("");
+            resultText.setText("");
+            intervalField.setText("");
+        }
     }
 
     @FXML
@@ -295,15 +289,15 @@ public class ExerciseController implements Initializable {
                 }
                 if (newtonButton.isSelected()) {
                     f.clear();
-                    f.add(ia.functionInterpolation(ia.newtonStringFunction()));
-                    resultText.setText("N(x)=" + ia.newtonStringFunction());
+                    f.add(ia.functionInterpolation(ia.newtonStringInterpolation()));
+                    resultText.setText("N(x)=" + ia.newtonStringInterpolation());
                 }
                 if (inverzButton.isSelected()) {
                     f.clear();
-                    f.add(ia.functionInterpolation(ia.inverseStringFunction()));
-                    resultText.setText("N~(x)=" + ia.inverseStringFunction());
+                    f.add(ia.functionInterpolation(ia.inverseStringInterpolation()));
+                    resultText.setText("N~(x)=" + ia.inverseStringInterpolation());
 
-                    String s = ia.inverseStringFunction();
+                    String s = ia.inverseStringInterpolation();
                     s = s.replace("x", "" + 0);
                     Expression exp = new ExpressionBuilder(s).build();
                     double res = exp.evaluate();
@@ -313,14 +307,14 @@ public class ExerciseController implements Initializable {
                 }
                 if (hermiteButton.isSelected()) {
                     f.clear();
-                    int db=0;
-                    for(TextFields field : textFields){
-                        if(!field.getText3().getText().equals("")){
+                    int db = 0;
+                    for (TextFields field : textFields) {
+                        if (!field.getText3().getText().equals("")) {
                             db++;
                         }
                     }
-                    
-                    if(db==0){
+
+                    if (db == 0) {
                         somethingWrong("Multiplicitások megadása nélkül csak sima Newton-interpolációt kapsz!");
                     }
                     f.add(ia.functionInterpolation(ia.hermiteStringInterpolation()));
@@ -341,7 +335,7 @@ public class ExerciseController implements Initializable {
             } catch (NumberFormatException nfe) {
                 somethingWrong("Matematikai Hiba!");
             } catch (ArithmeticException ae) {
-                somethingWrong("Matematikai Hiba");
+                somethingWrong("Matematikai Hiba!");
             }
 
         }
@@ -381,7 +375,7 @@ public class ExerciseController implements Initializable {
         } catch (NullPointerException npe) {
             somethingWrong("Először nyomd meg a 'Mehet' gombot!");
         } catch (ArithmeticException ae) {
-            somethingWrong("Matematikai hiba");
+            somethingWrong("Matematikai hiba!");
         }
 
     }
@@ -396,7 +390,7 @@ public class ExerciseController implements Initializable {
 
             if (!isEmptyString(x) && !isEmptyString(y)) {
                 try {
-                    if(hermiteButton.isSelected()&& isEmptyString(d1X) && !isEmptyString(d2X)){
+                    if (hermiteButton.isSelected() && isEmptyString(d1X) && !isEmptyString(d2X)) {
                         throw new InputException("Először az első deriváltat add meg!");
                     }
                     if (hermiteButton.isSelected() && !isEmptyString(d1X) && !isEmptyString(d2X)) {
@@ -425,7 +419,7 @@ public class ExerciseController implements Initializable {
                     throw ufve;
                 }
             } else {
-                throw new InputException("Nem adtál meg minden mezőt");
+                throw new InputException("Nem adtál meg minden mezőt!");
             }
 
         }
@@ -469,12 +463,12 @@ public class ExerciseController implements Initializable {
 
                     throw ufve;
                 } catch (IllegalArgumentException iae) {
-                    somethingWrong("Rossz a bevitel!");
+                    somethingWrong("Hiba a bevitelben!");
                 } catch (ArithmeticException ae) {
                     somethingWrong("Matematikai hiba!");
                 }
             } else {
-                throw new InputException("Nem adtál meg minden mezőt");
+                throw new InputException("Nem adtál meg minden mezőt!");
             }
         }
         sortNumbers();
@@ -518,7 +512,7 @@ public class ExerciseController implements Initializable {
                     somethingWrong("Rosszul adtad meg az intervallumot!");
                 }
             } else {
-                throw new InputException("Rosszul adtad meg az intervallumot");
+                throw new InputException("Rosszul adtad meg az intervallumot!");
 
             }
         }
@@ -713,7 +707,8 @@ public class ExerciseController implements Initializable {
 
             }
         });
-
+        
+      
     }
 
 }

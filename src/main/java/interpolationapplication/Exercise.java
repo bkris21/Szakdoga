@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 
@@ -16,6 +17,8 @@ public class Exercise extends Application {
         Scene scene = new Scene(root);
         stage.setResizable(false);
         stage.setScene(scene);
+         stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/img/icon.png")));
+        
         stage.show();
     }
     

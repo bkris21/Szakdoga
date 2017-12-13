@@ -54,7 +54,7 @@ public class CoordinateSystem extends Application {
         
       
         
-        Axes axes = new Axes(
+        Axis axes = new Axis(
                 400, 300,
                 -10, 10, 1,
                 -10, 10, 1

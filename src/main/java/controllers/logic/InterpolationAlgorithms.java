@@ -11,7 +11,6 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 import net.objecthunter.exp4j.function.Function;
-import org.apache.commons.lang.ArrayUtils;
 
 public class InterpolationAlgorithms {
 
@@ -100,31 +99,26 @@ public class InterpolationAlgorithms {
         return result;
     }
 
-    public String newtonStringFunction() {
+    public String newtonStringInterpolation() {
 
         List<Double> dividedDifferences = calculateDividedDifferenceTable(xPoints, yPoints);
 
-        String s = newtonStyleStringInterpolation(xPoints, dividedDifferences);
-
-        return s;
+        return newtonStyleStringInterpolation(xPoints, dividedDifferences);
     }
 
-    public String inverseStringFunction() {
-        String result = "";
+    public String inverseStringInterpolation() {
+
         List<Double> dividedDifferences = calculateDividedDifferenceTable(yPoints, xPoints);
 
-        String s = newtonStyleStringInterpolation(yPoints, dividedDifferences);
-
-        return s;
+        return newtonStyleStringInterpolation(yPoints, dividedDifferences);
     }
 
     public String hermiteStringInterpolation() {
 
         calculateHermiteDividedDifferenceTable(hermiteDividedDifferncesX, hermiteDividedDifferencesY, points);
 
-        String f = newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
 
-        return f;
+        return newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
     }
 
     public String splineStringInterPolation() {
@@ -151,7 +145,7 @@ public class InterpolationAlgorithms {
             splineIntervallPoints.add(pointsHelp.get(j - 1));
             splineIntervallPoints.add(pointsHelp.get(j));
 
-            uplodeHermiteLists(hermiteDividedDifferncesX, hermiteDividedDifferencesY, splineIntervallPoints);
+            uploadHermiteLists(hermiteDividedDifferncesX, hermiteDividedDifferencesY, splineIntervallPoints);
             calculateHermiteDividedDifferenceTable(hermiteDividedDifferncesX, hermiteDividedDifferencesY, splineIntervallPoints);
 
             pI = newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
@@ -177,7 +171,7 @@ public class InterpolationAlgorithms {
             splineIntervallPoints.add(pointsHelp.get(j));
             splineIntervallPoints.add(pointsHelp.get(j + 1));
 
-            uplodeHermiteLists(hermiteDividedDifferncesX, hermiteDividedDifferencesY, splineIntervallPoints);
+            uploadHermiteLists(hermiteDividedDifferncesX, hermiteDividedDifferencesY, splineIntervallPoints);
             calculateHermiteDividedDifferenceTable(hermiteDividedDifferncesX, hermiteDividedDifferencesY, splineIntervallPoints);
 
             pI = newtonStyleStringInterpolation(hermiteDividedDifferncesX, hermiteDividedDifferencesY);
@@ -215,7 +209,7 @@ public class InterpolationAlgorithms {
 
     public void calculateHermiteDividedDifferenceTable(List<Double> hermiteDividedDifferncesX, List<Double> hermiteDividedDifferencesY, List<Point> points) {
 
-        uplodeHermiteLists(hermiteDividedDifferncesX, hermiteDividedDifferencesY, points);
+        uploadHermiteLists(hermiteDividedDifferncesX, hermiteDividedDifferencesY, points);
 
         for (int i = 1; i < hermiteDividedDifferencesY.size(); i++) {
             for (int j = hermiteDividedDifferencesY.size() - 1; j > 0; j--) {
@@ -278,7 +272,7 @@ public class InterpolationAlgorithms {
         return result;
     }
 
-    private void uplodeHermiteLists(List<Double> hermiteDividedDifferncesX, List<Double> hermiteDividedDifferencesY, List<Point> points) {
+    private void uploadHermiteLists(List<Double> hermiteDividedDifferncesX, List<Double> hermiteDividedDifferencesY, List<Point> points) {
         hermiteDividedDifferencesY.clear();
         hermiteDividedDifferncesX.clear();
 

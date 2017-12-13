@@ -1,11 +1,10 @@
 package interpolationapplication;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Theory extends Application{
@@ -19,6 +18,9 @@ public class Theory extends Application{
        
         stage.setResizable(false);
         stage.setScene(scene);
+        
+        stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/img/icon.png")));
+        
         stage.show();
     }
 

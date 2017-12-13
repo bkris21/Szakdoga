@@ -15,7 +15,7 @@ public  class Plot extends Pane {
         public Plot(
                 Function f,
                 double xMin, double xMax, double xInc,
-                Axes axes,Color color
+                Axis axes,Color color
         ) {
             Path path = new Path();
             path.setStroke(color);
@@ -58,20 +58,20 @@ public  class Plot extends Pane {
             getChildren().setAll(axes, path);
         }
 
-        private double mapX(double x, Axes axes) {
+        private double mapX(double x, Axis axes) {
             double tx = axes.getPrefWidth() / 2;
             double sx = axes.getPrefWidth()
-                    / (axes.getXAxis().getUpperBound()
-                    - axes.getXAxis().getLowerBound());
+                    / (axes.getAxisX().getUpperBound()
+                    - axes.getAxisX().getLowerBound());
 
             return x * sx + tx;
         }
 
-        private double mapY(double y, Axes axes) {
+        private double mapY(double y, Axis axes) {
             double ty = axes.getPrefHeight() / 2;
             double sy = axes.getPrefHeight()
-                    / (axes.getYAxis().getUpperBound()
-                    - axes.getYAxis().getLowerBound());
+                    / (axes.getAxisY().getUpperBound()
+                    - axes.getAxisY().getLowerBound());
 
             return -y * sy + ty;
         }
