@@ -18,7 +18,7 @@ public class Theory extends Application{
        
         stage.setResizable(false);
         stage.setScene(scene);
-        
+        stage.setTitle("Elmélet");
         stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/img/icon.png")));
         
         stage.show();

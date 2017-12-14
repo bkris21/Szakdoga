@@ -19,6 +19,7 @@ public class InterpolationApplication extends Application {
 
         stage.setScene(scene);
         stage.setResizable(false);
+        stage.setTitle("Interpolációs feladatok");
         
        stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/img/icon.png")));
        

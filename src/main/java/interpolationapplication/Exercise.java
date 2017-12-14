@@ -18,6 +18,7 @@ public class Exercise extends Application {
         stage.setResizable(false);
         stage.setScene(scene);
          stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/img/icon.png")));
+         stage.setTitle("Gyakorlat");
         
         stage.show();
     }

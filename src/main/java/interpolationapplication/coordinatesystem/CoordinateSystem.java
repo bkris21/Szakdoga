@@ -62,7 +62,7 @@ public class CoordinateSystem extends Application {
 
         int i = 0;
         for (Function func : functions) {
-            plots.add(new Plot(func, intervals.get(i).getFirstPoint(), intervals.get(i).getSecondPoint(), 0.001, axes, Color.ORANGE.deriveColor(0, 1, 1, 0.8)));
+            plots.add(new Plot(func, intervals.get(i).getFirstPoint(), intervals.get(i).getSecondPoint(), 0.001, axes, Color.ORANGE.deriveColor(0, 1, 1, 0.9)));
             i++;
         }
        List<StackPane> panes = new ArrayList<>();
@@ -93,7 +93,7 @@ public class CoordinateSystem extends Application {
                     f2,
                     intervals.get(0).getFirstPoint(), intervals.get(intervals.size() - 1).getSecondPoint(), 0.001,
                     axes,
-                    Color.RED.deriveColor(0, 1, 1, 0.4)
+                    Color.RED.deriveColor(0, 1, 1, 0.3)
             );
         }
 

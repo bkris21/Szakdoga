@@ -10,7 +10,7 @@ interpolationapplication\Exercise.class
 controllers\ExerciseController$1.class
 controllers\logic\InterpolationAlgorithms$2.class
 controllers\logic\TextFields.class
-interpolationapplication\coordinatesystem\Axes.class
+interpolationapplication\coordinatesystem\Axis.class
 controllers\ExerciseController$4.class
 controllers\TheoryController.class
 interpolationapplication\coordinatesystem\Plot.class
