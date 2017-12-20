@@ -56,12 +56,12 @@
                   <Label fx:id="firstDerivative" layoutX="21.0" layoutY="130.0" text="F'(X)" />
                   <Label fx:id="secondDerivative" layoutX="19.0" layoutY="163.0" text="F''(X)" />
                   <TextField fx:id="resultOfInverse" layoutX="522.0" layoutY="216.0" prefHeight="25.0" prefWidth="62.0" />
-                  <Label fx:id="resultOfInverseLabel" layoutX="465.0" layoutY="221.0" text="N2(0)=" />
+                  <Label fx:id="resultOfInverseLabel" layoutX="465.0" layoutY="221.0" text="N(0)=" />
                   <TextArea fx:id="resultText" layoutX="161.0" layoutY="216.0" prefHeight="31.0" prefWidth="293.0" />
                   <Label fx:id="splineDX" layoutX="19.0" layoutY="130.0" text="S'(X):" />
                   <Button fx:id="addPoint" layoutX="488.0" layoutY="39.0" mnemonicParsing="false" onAction="#onClickAddPoint" prefHeight="31.0" prefWidth="33.0" text="+" />
                   <Button fx:id="deletePoint" layoutX="488.0" layoutY="70.0" mnemonicParsing="false" onAction="#onClickDeletePoint" prefHeight="31.0" prefWidth="33.0" text="-" />
-                  <Button fx:id="clear" layoutX="473.0" layoutY="115.0" mnemonicParsing="false" onAction="#onClickClear" text="Törlés" />
+                  <Button fx:id="clear" layoutX="473.0" layoutY="115.0" mnemonicParsing="false" onAction="#onClickClear" text="Tisztáz" />
                   <Button fx:id="goButton" layoutX="458.0" layoutY="158.0" mnemonicParsing="false" onAction="#goInterpolation" prefHeight="31.0" prefWidth="90.0" text="Mehet" />
                </children>
             </AnchorPane>

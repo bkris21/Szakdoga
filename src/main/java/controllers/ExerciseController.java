@@ -263,11 +263,11 @@ public class ExerciseController implements Initializable {
         resultText.clear();
 
         if (interpolationRadioButtonGroup.getSelectedToggle() == null) {
-            somethingWrong("Nem jelölte meg az interpoláció fajtáját!");
+            somethingWrong("Nem jelölted meg az interpoláció fajtáját!");
         } else if (isEmptyString(pointsNumber.getText())) {
             somethingWrong("Nem adtad meg az alappontok számát!");
         } else if (textFields.size() == 0) {
-            somethingWrong("Alappontokat meg kell adni!");
+            somethingWrong("Nem egész számot adtál meg az alappontok számánál!");
         } else {
 
             try {
@@ -293,6 +293,9 @@ public class ExerciseController implements Initializable {
                     resultText.setText("N(x)=" + ia.newtonStringInterpolation());
                 }
                 if (inverzButton.isSelected()) {
+                    if(!isMonotoneGrow() && !isMonotonDecrease()){
+                        throw new InputException("Nem szigorúan monoton a függvény!");
+                    }
                     f.clear();
                     f.add(ia.functionInterpolation(ia.inverseStringInterpolation()));
                     resultText.setText("N~(x)=" + ia.inverseStringInterpolation());
@@ -332,9 +335,7 @@ public class ExerciseController implements Initializable {
                 somethingWrong(ie.getMessage());
             } catch (UnknownFunctionOrVariableException ufve) {
                 somethingWrong("Hiba a bevitelben!");
-            } catch (NumberFormatException nfe) {
-                somethingWrong("Matematikai Hiba!");
-            } catch (ArithmeticException ae) {
+            } catch (NumberFormatException | ArithmeticException nfe) {
                 somethingWrong("Matematikai Hiba!");
             }
 
@@ -350,7 +351,7 @@ public class ExerciseController implements Initializable {
             }
 
             interval.add(readInterval(intervalField.getText()));
-            if (!functionsButton.isSelected()) {
+            if (!functionsButton.isSelected() || inverzButton.isSelected()) {
 
                 new CoordinateSystem(f, interval).start(new Stage());
 
@@ -401,14 +402,11 @@ public class ExerciseController implements Initializable {
                         p = makeExpression(x, y);
                     }
                     for (Point p1 : numberPairs) {
-                        if (!inverzButton.isSelected()) {
+                        
 
                             if (p1.getFirstPoint() == p.getFirstPoint()) {
                                 throw new InputException("Kétszer adtál meg egy alappontot!");
                             }
-                        } else if (p1.getFirstPoint() == p.getFirstPoint() || p1.getSecondPoint() == p.getSecondPoint()) {
-                            throw new InputException("Nem monoton a függvény!");
-                        }
 
                     }
 
@@ -482,6 +480,8 @@ public class ExerciseController implements Initializable {
             }
 
         }
+      
+        
         return numberPairs;
     }
 
@@ -509,10 +509,10 @@ public class ExerciseController implements Initializable {
                     p = new Point(exp1.evaluate(), exp2.evaluate());
 
                 } catch (UnknownFunctionOrVariableException ufve) {
-                    somethingWrong("Rosszul adtad meg az intervallumot!");
+                    throw new InputException("Ismeretlen kifejezés az intervallum megadásánál!");
                 }
             } else {
-                throw new InputException("Rosszul adtad meg az intervallumot!");
+                throw new InputException("Szintaktikai hiba az intervallum megadásánál!");
 
             }
         }
@@ -709,6 +709,24 @@ public class ExerciseController implements Initializable {
         });
         
       
+    }
+
+    private boolean isMonotoneGrow() {
+        for(int i=0;i<numberPairs.size()-1;i++){
+            if(numberPairs.get(i).getSecondPoint()<=numberPairs.get(i+1).getSecondPoint()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isMonotonDecrease() {
+        for(int i=0;i<numberPairs.size()-1;i++){
+            if(numberPairs.get(i).getSecondPoint()>=numberPairs.get(i+1).getSecondPoint()){
+                return false;
+            }
+        }
+        return true;
     }
 
 }

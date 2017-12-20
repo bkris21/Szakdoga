@@ -41,8 +41,25 @@ public class TheoryController {
      @FXML
     private void newtonTheoryAction(ActionEvent event) throws Exception {
             readTextFromFile("Newton.htm");
-            mainButton.setText("Newton interpoláció");
+            mainButton.setText("Osztott differenciák és Newton alak");
     }
+      @FXML
+    private void inverzTheoryAction(ActionEvent event) throws Exception {
+            readTextFromFile("Inverz.htm");
+            mainButton.setText("Inverz interpoláció");
+    }
+    
+      @FXML
+    private void hermiteTheoryAction(ActionEvent event) throws Exception {
+            readTextFromFile("Hermite.htm");
+            mainButton.setText("Hermite-interpoláció");
+    }
+      @FXML
+    private void splineTheoryAction(ActionEvent event) throws Exception {
+            readTextFromFile("Spline.htm");
+            mainButton.setText("Spline-interpoláció");
+    }
+    
     
     
    

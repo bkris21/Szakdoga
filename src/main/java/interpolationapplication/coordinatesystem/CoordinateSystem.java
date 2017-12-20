@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 
 import javafx.stage.Stage;
 import javax.swing.RootPaneContainer;
+import sun.awt.SunToolkit;
 
 public class CoordinateSystem extends Application {
 
@@ -47,13 +48,11 @@ public class CoordinateSystem extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-       
+
         StackPane rootPane = new StackPane();
         rootPane.setPadding(new Insets(20));
         rootPane.setStyle("-fx-background-color: rgb(35, 39, 50);");
-        
-      
-        
+
         Axis axes = new Axis(
                 400, 300,
                 -10, 10, 1,
@@ -65,20 +64,15 @@ public class CoordinateSystem extends Application {
             plots.add(new Plot(func, intervals.get(i).getFirstPoint(), intervals.get(i).getSecondPoint(), 0.001, axes, Color.ORANGE.deriveColor(0, 1, 1, 0.9)));
             i++;
         }
-       List<StackPane> panes = new ArrayList<>();
-       
-                  
-       
-       
-       for(int j=0;j<plots.size();j++){
-           panes.add(new StackPane(plots.get(j)));  
-       }
+        List<StackPane> panes = new ArrayList<>();
 
-        for(StackPane pane : panes){
+        for (int j = 0; j < plots.size(); j++) {
+            panes.add(new StackPane(plots.get(j)));
+        }
+
+        for (StackPane pane : panes) {
             rootPane.getChildren().add(pane);
         }
-        
-     
 
         if (f2.getName().equals("default")) {
             plotOfF2 = new Plot(
@@ -97,50 +91,51 @@ public class CoordinateSystem extends Application {
             );
         }
 
-
-       
-       
-       
         StackPane layout2 = new StackPane(plotOfF2);
-
-       
 
         stage.setTitle("Grafikus nézet");
 
-       
         rootPane.getChildren().add(layout2);
 
-         Scene scene = new Scene(rootPane,430,370);
-           stage.setScene(scene);
+        Scene scene = new Scene(rootPane, 430, 370);
+        stage.setScene(scene);
 
+        
+        
        
        
          
-  
+
+          
+          
         rootPane.setOnScroll(new EventHandler<ScrollEvent>() {
-            
+
             @Override
             public void handle(ScrollEvent event) {
                 event.consume();
-               
+
                 if (event.getDeltaY() == 0) {
                     return;
                 }
 
-                double scaleFactor ;
-                
-                if(event.getDeltaY()>0){
-                    scaleFactor=SCALE_DELTA;
-                    
-                }else{
-                     scaleFactor=1/SCALE_DELTA;
-                   
+                double scaleFactor;
+
+                if (event.getDeltaY() > 0) {
+                    scaleFactor = SCALE_DELTA;
+
+                } else {
+                    scaleFactor = 1 / SCALE_DELTA;
+
                 }
 
-                if (!(rootPane.getScaleX() * scaleFactor < 1) && !(rootPane.getScaleX() * scaleFactor > 11)) {
+                if (!(rootPane.getScaleX() * scaleFactor < 1) && !(rootPane.getScaleX() * scaleFactor > 8)
+                        && rootPane.getLayoutX() + (rootPane.getWidth() / 2) * rootPane.getScaleX() * scaleFactor >= stage.getWidth() / 2
+                        && rootPane.getLayoutX() - ((rootPane.getWidth() / 2) * rootPane.getScaleX()) * scaleFactor <= -stage.getWidth() /2
+                        && rootPane.getLayoutY() + (rootPane.getHeight() / 2) * rootPane.getScaleY() * scaleFactor >= stage.getHeight() / 2
+                        && rootPane.getLayoutY() - (rootPane.getHeight() / 2) * rootPane.getScaleY() * scaleFactor <= -stage.getHeight() / 2) {
                     rootPane.setScaleX(rootPane.getScaleX() * scaleFactor);
                     rootPane.setScaleY(rootPane.getScaleY() * scaleFactor);
-                
+
                 }
 
             }
@@ -159,20 +154,21 @@ public class CoordinateSystem extends Application {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 double newX = mouseEvent.getScreenX() + dragDelta.x;
-          
-                rootPane.setLayoutX(mouseEvent.getScreenX() + dragDelta.x);
-                rootPane.setLayoutY(mouseEvent.getScreenY() + dragDelta.y);
-                System.out.println(rootPane.getLayoutX()-rootPane.getScaleX()+scene.getWidth());
-          
+                if (mouseEvent.getScreenX() + dragDelta.x + (rootPane.getWidth() / 2) * rootPane.getScaleX() >= stage.getWidth() / 2
+                        && mouseEvent.getScreenX() + dragDelta.x - (rootPane.getWidth() / 2) * rootPane.getScaleX() <= -(stage.getWidth()/2 )
+                        && mouseEvent.getScreenY() + dragDelta.y + (rootPane.getHeight() / 2) * rootPane.getScaleY() >= stage.getHeight() / 2
+                        && mouseEvent.getScreenY() + dragDelta.y - (rootPane.getHeight() / 2) * rootPane.getScaleY() <= -stage.getHeight() / 2) {
+
+                    rootPane.setLayoutX(mouseEvent.getScreenX() + dragDelta.x);
+                    rootPane.setLayoutY(mouseEvent.getScreenY() + dragDelta.y);
+                    
+                    
+                }
+
             }
 
         });
-        
-      
-        
-        
-        
-        
+
         stage.setResizable(false);
 
         stage.show();
@@ -183,6 +179,5 @@ public class CoordinateSystem extends Application {
         double x;
         double y;
     }
-    
 
 }
